@@ -5,10 +5,10 @@ import {expect} from "chai";
 describe('Content Summary Child', () => {
 
   it('Should remove blockquotes', () => {
-    let input = `> But why don't you also keep steemit active by actively searching for contents you think are getting less than you think they deserve and upvote them big time.
-    
-    Flagging achieve something similar. The difference is that with flagging there is no possibility of collusion for profit, Which is what most of @adsactly voting ring power is being used for.`;
-    let expected = 'Flagging achieve something similar. The difference is that with flagging there is no possibility of collusion for profit, Which is what most of @adsactly voting ring power is being used for.';
+    let input = `> But why don't you also keep dSite active by actively searching for contents you think are getting less than you think they deserve and upvote them big time.
+
+    Flagging achieve something similar. The difference is that with flagging there is no possibility of collusion for profit, Which is what most of @jared voting ring power is being used for.`;
+    let expected = 'Flagging achieve something similar. The difference is that with flagging there is no possibility of collusion for profit, Which is what most of @jared voting ring power is being used for.';
     expect(contentSummaryChild(input)).to.equal(expected);
   });
 
@@ -74,11 +74,11 @@ describe('Content Summary Child', () => {
     expect(contentSummaryChild(input, 200)).to.equal(expected);
 
     input = `<html>
-<center><a href='https://d.tube/#!/v/surfermarly/x2zm8s26'><img src='https://steemitimages.com/DQmdxVxFgLu8PT1TchgQUHtd7LGvKtF5u1DbHmDDKALiwxi/dreamsd1.jpg'></a></center><hr>
+<center><a href='https://dvideo.io/#!/v/surfermarly/x2zm8s26'><img src='https://dsiteimages.com/DQmdxVxFgLu8PT1TchgQUHtd7LGvKtF5u1DbHmDDKALiwxi/dreamsd1.jpg'></a></center><hr>
 <p><b>Everybody has a dream. Most of the time it takes us a while to turn these great wishes into reality, especially   because they usually come with a bigger     price tag.</b></p>
 <p>Now thanks to Steem some of us will be able to cut corners in order to achieve their goals more quickly. The additional income can be a game changer to many players.</p>
 <p>My Steem earnings enabled me to buy a piece of land where I'll build my first own house. Writing down these words still seems a bit unreal to me, since I didn't believe to come to that point so quickly.</p>
-<h3>Click on the above image or <a href='https://d.tube/#!/v/surfermarly/x2zm8s26'>HERE ▶️</a> to watch my video statement.</h3>
+<h3>Click on the above image or <a href='https://dvideo.io/#!/v/surfermarly/x2zm8s26'>HERE ▶️</a> to watch my video statement.</h3>
 <p>Without hard work and dedication as well as the great support from the community this wouldn't have been possible. Also the timing was brilliant, I joined in the earlier stages.</p>
 <p><b>I'm both grateful and proud.</b></p>
 <p>Many people supported me along the way, some tried to tear me down. I'm glad I only stayed with those who pushed me, they have a large stake in my success story.</p></html>`;
@@ -86,7 +86,7 @@ describe('Content Summary Child', () => {
     expect(contentSummaryChild(input, 200)).to.equal(expected);
 
 
-    input = `<center><a href='https://d.tube/#!/v/marpemusic/gi5e9yrl'><img src='https://ipfs.io/ipfs/QmYK5yzDHyoDVQQ5xgV4RLzcZz5Qy95Hz1n6qbEusJGHYB'></a></center><hr>
+    input = `<center><a href='https://dvideo.io/#!/v/marpemusic/gi5e9yrl'><img src='https://ipfs.io/ipfs/QmYK5yzDHyoDVQQ5xgV4RLzcZz5Qy95Hz1n6qbEusJGHYB'></a></center><hr>
 
 ![DTUBE.jpg](https://res.cloudinary.com/hpiynhbhq/image/upload/v1519196266/ebleqjokesumzw3mwpcz.jpg)
 

@@ -7,7 +7,7 @@ export default () => {
       selectedTag: '='
     },
     templateUrl: 'templates/directives/side-tag-list.html',
-    controller: ($scope, $rootScope, $timeout, $location, steemService) => {
+    controller: ($scope, $rootScope, $timeout, $location, dpayService) => {
 
       let timeoutPromise = null;
 
@@ -50,7 +50,7 @@ export default () => {
 
       const loadTags = () => {
         $scope.loadingTags = true;
-        steemService.getTrendingTags($rootScope.sideAfterTag).then((resp) => {
+        dpayService.getTrendingTags($rootScope.sideAfterTag).then((resp) => {
           $rootScope.tags = resp.map(a => a.name).filter(a => a.length > 0);
         }).catch(() => {
         }).then(() => {

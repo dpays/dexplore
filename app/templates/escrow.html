@@ -51,7 +51,7 @@
               <p class="help-block" ng-if="agentErr">{{ agentErr }}</p>
               <div ng-if="agentData" style="margin-top: 10px">
                 <p>{{ 'ESCROW_TERMS' | translate }}: {{ agentData.escrowInfo.terms }}</p>
-                <p>{{ 'ESCROW_FEE' | translate }}: {{ agentData.escrowInfo.fees.STEEM }} STEEM / {{ agentData.escrowInfo.fees.SBD }} SBD</p>
+                <p>{{ 'ESCROW_FEE' | translate }}: {{ agentData.escrowInfo.fees.BEX }} BEX / {{ agentData.escrowInfo.fees.BBD }} BBD</p>
               </div>
             </div>
           </div>
@@ -65,8 +65,8 @@
                     {{ asset }}
                     <span class="caret"></span></button>
                   <ul class="dropdown-menu dropdown-menu-right">
-                    <li><a ng-click="assetChanged('STEEM')">STEEM</a></li>
-                    <li><a ng-click="assetChanged('SBD')">SBD</a></li>
+                    <li><a ng-click="assetChanged('BEX')">BEX</a></li>
+                    <li><a ng-click="assetChanged('BBD')">BBD</a></li>
                   </ul>
                 </div>
               </div>

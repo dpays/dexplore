@@ -29,7 +29,7 @@ export default ($scope, $rootScope, $uibModal, $uibModalInstance, cryptoService)
   $scope.qrClicked = (key) => {
 
     if ($rootScope.user.type === 'sc') {
-      $rootScope.showError('You cannot see private keys with steem connect login.');
+      $rootScope.showError('You cannot see private keys with dPayID login.');
       return;
     }
 

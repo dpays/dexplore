@@ -1,4 +1,4 @@
-export default ($scope, $rootScope, $filter, $routeParams, $timeout, $location, userService, steemService, eSteemService, steemAuthenticatedService) => {
+export default ($scope, $rootScope, $filter, $routeParams, $timeout, $location, userService, dpayService, dExplorerService, dpayAuthenticatedService) => {
 
   const curAccount = $routeParams.account;
   const accountList = userService.getAll();
@@ -42,7 +42,7 @@ export default ($scope, $rootScope, $filter, $routeParams, $timeout, $location, 
     $scope.notFound = false;
     $scope.escrowData = null;
 
-    eSteemService.searchEscrow(id).then((resp) => {
+    dExplorerService.searchEscrow(id).then((resp) => {
       if (resp.data.length === 0) {
         $scope.notFound = true;
         return;
@@ -75,13 +75,13 @@ export default ($scope, $rootScope, $filter, $routeParams, $timeout, $location, 
 
       switch (action) {
         case 'approve':
-          prms = steemAuthenticatedService.escrowApprove(wif, $scope.escrowData.from, $scope.escrowData.to, $scope.escrowData.agent, who, escrowId, true);
+          prms = dpayAuthenticatedService.escrowApprove(wif, $scope.escrowData.from, $scope.escrowData.to, $scope.escrowData.agent, who, escrowId, true);
           break;
         case 'dispute':
-          prms = steemAuthenticatedService.escrowDispute(wif, $scope.escrowData.from, $scope.escrowData.to, $scope.escrowData.agent, who, escrowId);
+          prms = dpayAuthenticatedService.escrowDispute(wif, $scope.escrowData.from, $scope.escrowData.to, $scope.escrowData.agent, who, escrowId);
           break;
         case 'release':
-          prms = steemAuthenticatedService.escrowRelease(wif, $scope.escrowData.from, $scope.escrowData.to, $scope.escrowData.agent, who, releaseTo, escrowId, $scope.escrowData.sbd_amount, $scope.escrowData.steem_amount);
+          prms = dpayAuthenticatedService.escrowRelease(wif, $scope.escrowData.from, $scope.escrowData.to, $scope.escrowData.agent, who, releaseTo, escrowId, $scope.escrowData.bbd_amount, $scope.escrowData.dpay_amount);
           break;
       }
 
@@ -105,7 +105,7 @@ export default ($scope, $rootScope, $filter, $routeParams, $timeout, $location, 
   const loadAccount = () => {
     $scope.fetchingAccount = true;
 
-    return steemService.getAccounts([curAccount]).then((resp) => {
+    return dpayService.getAccounts([curAccount]).then((resp) => {
       const account = resp[0];
 
     }).catch((e) => {

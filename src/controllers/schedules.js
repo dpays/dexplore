@@ -1,10 +1,10 @@
-export default ($scope, $rootScope, $location, eSteemService, activeUsername) => {
+export default ($scope, $rootScope, $location, dExplorerService, activeUsername) => {
 
   $scope.loadingSchedules = true;
   $scope.schedules = [];
 
   const fetchSchedules = () => {
-    eSteemService.getSchedules(activeUsername()).then((resp) => {
+    dExplorerService.getSchedules(activeUsername()).then((resp) => {
       $scope.schedules = resp.data;
     }).catch((e) => {
       $rootScope.showError('Could not fetch schedules!');

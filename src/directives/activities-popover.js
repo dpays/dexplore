@@ -4,7 +4,7 @@ export default () => {
     replace: true,
     scope: {},
     template: `<a ng-click="" uib-popover-template="'templates/directives/activities-popover.html'" popover-class="activities-popover" popover-placement="bottom" popover-trigger="'outsideClick'" popover-enable="enabled"  uib-tooltip="{{ 'ACTIVITIES' | __ }}" tooltip-popup-delay="1000" tooltip-placement="left"><span class="has-activity" ng-if="$root.unreadActivities">{{ $root.unreadActivities < 100 ? $root.unreadActivities : '&#8226;&#8226;&#8226;' }}</span><i class="fa fa-bell"></i></a>`,
-    controller: ($scope, $rootScope, $location, steemService, eSteemService, activeUsername) => {
+    controller: ($scope, $rootScope, $location, dpayService, dExplorerService, activeUsername) => {
 
       // disabled popover on activities page
       $scope.enabled = $rootScope.curCtrl !== 'activitiesCtrl';
@@ -26,22 +26,22 @@ export default () => {
 
         switch ($rootScope.activityType.selected) {
           case 'votes':
-            prms = eSteemService.getMyVotes(account);
+            prms = dExplorerService.getMyVotes(account);
             break;
           case 'replies':
-            prms = eSteemService.getMyReplies(account);
+            prms = dExplorerService.getMyReplies(account);
             break;
           case 'mentions':
-            prms = eSteemService.getMyMentions(account);
+            prms = dExplorerService.getMyMentions(account);
             break;
           case 'follows':
-            prms = eSteemService.getMyFollows(account);
+            prms = dExplorerService.getMyFollows(account);
             break;
           case 'reblogs':
-            prms = eSteemService.getMyReblogs(account);
+            prms = dExplorerService.getMyReblogs(account);
             break;
           default:
-            prms = eSteemService.getActivities(account);
+            prms = dExplorerService.getActivities(account);
         }
 
         prms.then((resp) => {
@@ -64,7 +64,7 @@ export default () => {
 
       $scope.markAllRead = () => {
         $scope.marking = true;
-        eSteemService.marActivityAsRead(activeUsername()).then((resp) => {
+        dExplorerService.marActivityAsRead(activeUsername()).then((resp) => {
           $rootScope.unreadActivities = resp.data.unread;
 
           $rootScope.$broadcast('activitiesMarked');

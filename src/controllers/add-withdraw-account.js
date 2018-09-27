@@ -1,6 +1,6 @@
 import badActors from '../data/bad-actors.json';
 
-export default ($scope, $rootScope, $timeout, $filter, $uibModalInstance, autoCancelTimeout, steemService, steemAuthenticatedService, afterSuccess) => {
+export default ($scope, $rootScope, $timeout, $filter, $uibModalInstance, autoCancelTimeout, dpayService, dpayAuthenticatedService, afterSuccess) => {
 
   $scope.to = '';
   $scope.auto = {val: false};
@@ -37,7 +37,7 @@ export default ($scope, $rootScope, $timeout, $filter, $uibModalInstance, autoCa
       $scope.toData = null;
       $scope.fetchingTo = true;
 
-      steemService.getAccounts([$scope.to]).then((resp) => {
+      dpayService.getAccounts([$scope.to]).then((resp) => {
         if (resp.length === 0) {
           $scope.toErr = $filter('translate')('NONEXIST_USER');
           return;
@@ -63,7 +63,7 @@ export default ($scope, $rootScope, $timeout, $filter, $uibModalInstance, autoCa
       const auto = $scope.auto.val;
 
       $scope.processing = true;
-      steemAuthenticatedService.setWithdrawVestingRoute(to, perc, auto).then((resp) => {
+      dpayAuthenticatedService.setWithdrawVestingRoute(to, perc, auto).then((resp) => {
         afterSuccess();
         $scope.close();
       }).catch((e) => {

@@ -46,7 +46,7 @@ const beforeTest = function () {
     waitTimeout: 10000
   });
 
-  let testLoginDataPath = join(homedir(), '/esteem-surfer-test-users.json');
+  let testLoginDataPath = join(homedir(), '/dexplorer-surfer-test-users.json');
   if (!existsSync(testLoginDataPath)) {
     console.error('\x1b[31m', 'Login data for testing not found!', '\x1b[0m');
     process.exit();

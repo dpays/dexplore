@@ -10,7 +10,7 @@ export default ($rootScope, $location, $uibModal, userService, activeUsername) =
       searchStr: '<?'
     },
     templateUrl: 'templates/directives/navbar.html',
-    controller: ($scope, $rootScope, $routeParams, $location, $filter, constants, steemService, activeUsername, settingsService) => {
+    controller: ($scope, $rootScope, $routeParams, $location, $filter, constants, dpayService, activeUsername, settingsService) => {
 
       // Show FEED filter if user logged in or if current route is /feed/...
       if (activeUsername() || ($rootScope.curCtrl === 'feedCtrl' && $routeParams.username)) {
@@ -175,7 +175,7 @@ export default ($rootScope, $location, $uibModal, userService, activeUsername) =
 
           $scope.fetchingSearch = true;
           $scope.$applyAsync();
-          resp = await steemService.getContent(parsed.author, parsed.permlink);
+          resp = await dpayService.getContent(parsed.author, parsed.permlink);
           $scope.fetchingSearch = false;
           $scope.$applyAsync();
 
@@ -189,7 +189,7 @@ export default ($rootScope, $location, $uibModal, userService, activeUsername) =
 
           $scope.fetchingSearch = true;
           $scope.$applyAsync();
-          resp = await steemService.getAccounts([account]);
+          resp = await dpayService.getAccounts([account]);
           $scope.fetchingSearch = false;
           $scope.$applyAsync();
 

@@ -120,8 +120,8 @@ app.on('window-all-closed', () => {
   app.quit();
 });
 
-app.setAsDefaultProtocolClient('steem');
-app.setAsDefaultProtocolClient('esteem');
+app.setAsDefaultProtocolClient('dpay');
+app.setAsDefaultProtocolClient('dexplorer');
 
 
 app.on('activate', function () {
@@ -151,7 +151,7 @@ const sendProtocolUrl2Window = (u) => {
     return false;
   }
 
-  const m = u.match(/e?steem:\/\/[-a-zA-Z0-9@:%._\+~#=\/]{2,500}/gi);
+  const m = u.match(/e?dpay:\/\/[-a-zA-Z0-9@:%._\+~#=\/]{2,500}/gi);
   if (!m) {
     return false;
   }
@@ -183,4 +183,3 @@ ipcMain.on('download-update', () => {
 ipcMain.on('update-restart', () => {
   autoUpdater.quitAndInstall();
 });
-

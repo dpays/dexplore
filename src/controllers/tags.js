@@ -1,6 +1,6 @@
-export default ($scope, steemService) => {
+export default ($scope, dpayService) => {
 
-  steemService.getState('/tags').then((resp) => {
+  dpayService.getState('/tags').then((resp) => {
     console.log(resp)
   })
 };

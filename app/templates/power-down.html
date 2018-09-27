@@ -29,7 +29,7 @@
                <tr ng-repeat="w in withdrawRoutes">
                  <th>{{ w.to_account }}</th>
                  <td>{{ w.percent/100 }}%</td>
-                 <td><span ng-if="w.auto_vest">VEST</span><span ng-if="!w.auto_vest">STEEM</span></td>
+                 <td><span ng-if="w.auto_vest">VEST</span><span ng-if="!w.auto_vest">BEX</span></td>
                  <td><button class="btn btn-danger btn-sm" ng-disabled="deletingWithDrawAccount || keyRequiredErr" ng-click="deleteWithDrawAccount(w.to_account)"><i class="fa fa-trash"></i></button></td>
                </tr>
                </tbody>
@@ -44,14 +44,14 @@
              <p class="help-block text-center"><small>{{ 'DRAG_SLIDER' | __ }}</small></p>
              <div class="power-down-preview">
                <div class="before">
-                 <span class="label label-danger">-{{ amountSp }} SP</span>
+                 <span class="label label-danger">-{{ amountSp }} BP</span>
                  <span class="label label-default">-{{ amountVestFormatted }} VESTS</span>
                </div>
                <div class="arrow">
                  <i class="fa fa-arrow-down arrow-icon"></i>
                </div>
                <div class="after">
-                 <span class="label label-success">+{{ steemPerWeek }} STEEM</span>
+                 <span class="label label-success">+{{ dpayPerWeek }} BEX</span>
                  <br>
                  <small>{{ 'ESTIMATED_WEEKLY' | __ }}</small>
                </div>
@@ -63,7 +63,7 @@
            <label class="col-sm-3 control-label">{{ 'INCOMING_FUNDS' | __ }}</label>
            <div class="col-sm-9">
              <div class="incoming-funds">
-               <span class="text-success steem">+{{ withdrawVesting2sp }} STEEM</span> <br>
+               <span class="text-success dpay">+{{ withdrawVesting2sp }} BEX</span> <br>
                <span class="text-danger vests">–{{ withdrawVesting }} VESTS</span> <span class="text-muted power-down-date"> @ {{ nextPowerDown | dateFormatted }}</span>
              </div>
            </div>
@@ -80,4 +80,3 @@
   </div>
 </div>
 <app-footer></app-footer>
-

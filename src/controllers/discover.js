@@ -16,7 +16,7 @@ const prepareAccountData = (data) => {
 };
 
 
-export default ($scope, $rootScope, $location, steemService) => {
+export default ($scope, $rootScope, $location, dpayService) => {
 
   $scope.accountList = $rootScope.Data['discoverAccountList'] || [];
 
@@ -35,7 +35,7 @@ export default ($scope, $rootScope, $location, steemService) => {
     const shuffledList = userList.sort(() => .5 - Math.random());
     const selectedList = shuffledList.slice(0, 40);
 
-    steemService.getAccounts(selectedList).then((accounts) => {
+    dpayService.getAccounts(selectedList).then((accounts) => {
       accounts.forEach(e => $scope.accountList.push(prepareAccountData(e)));
     }).catch((e) => {
       $rootScope.showError(e);

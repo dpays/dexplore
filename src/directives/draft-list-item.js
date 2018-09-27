@@ -36,7 +36,7 @@ export default () => {
         </div>
     </div>
     `,
-    controller: ($scope, $rootScope, $location, $filter, $window, eSteemService, activeUsername) => {
+    controller: ($scope, $rootScope, $location, $filter, $window, dExplorerService, activeUsername) => {
 
       $scope.deleting = false;
       $scope.tags = $scope.draft.tags ? $scope.draft.tags.replace(/ /g, ', ') : '';
@@ -63,7 +63,7 @@ export default () => {
       $scope.deleteClicked = (draft) => {
         if ($window.confirm($filter('translate')('ARE_YOU_SURE'))) {
           $scope.deleting = true;
-          eSteemService.removeDraft(draft._id, activeUsername()).then((resp) => {
+          dExplorerService.removeDraft(draft._id, activeUsername()).then((resp) => {
             $rootScope.$broadcast('DRAFT_DELETED');
             $rootScope.showSuccess($filter('translate')('POST_IS_UNDRAFT'));
           }).catch((e) => {

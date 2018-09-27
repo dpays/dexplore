@@ -1,6 +1,6 @@
 import {postUrlParser} from '../helpers/post-url-parser';
 
-export default ($scope, $rootScope, $location, steemService, steemAuthenticatedService, activeUsername) => {
+export default ($scope, $rootScope, $location, dpayService, dpayAuthenticatedService, activeUsername) => {
 
   $scope.max = 30;
   $scope.remaining = 30;
@@ -23,11 +23,11 @@ export default ($scope, $rootScope, $location, steemService, steemAuthenticatedS
   const main = () => {
     $scope.fetching = true;
 
-    steemService.getAccounts([activeUsername()]).then((resp) => {
+    dpayService.getAccounts([activeUsername()]).then((resp) => {
       $scope.userWitnessList = resp[0].witness_votes;
       $scope.proxy = resp[0].proxy;
 
-      return steemService.getWitnessesByVote(null, 100);
+      return dpayService.getWitnessesByVote(null, 100);
     }).then((resp) => {
       let i = 1;
       for (let row of resp) {
@@ -66,7 +66,7 @@ export default ($scope, $rootScope, $location, steemService, steemAuthenticatedS
 
   $scope.vote = (witness) => {
     $scope.userWitnessList.push(witness);
-    steemAuthenticatedService.witnessVote(witness, true).then((resp) => {
+    dpayAuthenticatedService.witnessVote(witness, true).then((resp) => {
 
     }).catch((e) => {
       $scope.userWitnessList = $scope.userWitnessList.filter(e => e !== witness);
@@ -76,7 +76,7 @@ export default ($scope, $rootScope, $location, steemService, steemAuthenticatedS
 
   $scope.unVote = (witness) => {
     $scope.userWitnessList = $scope.userWitnessList.filter(e => e !== witness);
-    steemAuthenticatedService.witnessVote(witness, false).then((resp) => {
+    dpayAuthenticatedService.witnessVote(witness, false).then((resp) => {
 
     }).catch((e) => {
       $scope.userWitnessList.push(witness);
@@ -95,7 +95,7 @@ export default ($scope, $rootScope, $location, steemService, steemAuthenticatedS
   };
 
   $scope.goThread = (path) => {
-    steemService.getContent(path.author, path.permlink).then((resp) => {
+    dpayService.getContent(path.author, path.permlink).then((resp) => {
       let u = `/post/${resp.parent_permlink}/${resp.author}/${resp.permlink}`;
       $location.path(u);
     });
@@ -108,7 +108,7 @@ export default ($scope, $rootScope, $location, steemService, steemAuthenticatedS
     }
 
     $scope.settingProxy = true;
-    steemAuthenticatedService.witnessProxy(newProxy).then((resp) => {
+    dpayAuthenticatedService.witnessProxy(newProxy).then((resp) => {
       $scope.proxy = newProxy;
       $scope.newProxy = '';
     }).catch((e) => {
@@ -121,7 +121,7 @@ export default ($scope, $rootScope, $location, steemService, steemAuthenticatedS
 
   $scope.clearProxy = () => {
     $scope.clearingProxy = true;
-    steemAuthenticatedService.witnessProxy('').then((resp) => {
+    dpayAuthenticatedService.witnessProxy('').then((resp) => {
       $scope.proxy = null;
     }).catch((e) => {
       $rootScope.showError(e);

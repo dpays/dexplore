@@ -41,19 +41,13 @@ export default {
   postListSize: 20,
   commentListSize: 10,
   servers: [
-    'https://api.steemit.com',
-    'https://rpc.esteem.ws',
-    'https://rpc.steemviz.com',
-    'https://rpc.buildteam.io',
-    'https://gtg.steem.house:8090',
-    'https://steemd.pevo.science',
-    'https://steemd.steemitstage.com',
-    'https://steemd.previx.io:8090',
-    'https://seed.bitcoiner.me',
-    'https://rpc.steemliberator.com',
-    'https://steemd.minnowsupportproject.org'
+    'https://api.dpays.io',
+    'https://dpayapi.com',
+    'https://api.dpayeurope.com',
+    'https://api.dpayjs.com',
+    'https://dapi.dsite.io'
   ],
-  defaultServer: 'https://api.steemit.com',
+  defaultServer: 'https://api.dpays.io',
   languages: [
     {id: 'en-US', name: 'English'},
     {id: 'en-GB', name: 'English GB'},
@@ -148,5 +142,5 @@ export default {
     {id: 'ngn', name: 'NGN'}
   ],
   defaultCurrency: 'usd',
-  versionCheckUrl: 'https://api.github.com/repos/eSteemApp/esteem-surfer/releases/latest'
+  versionCheckUrl: 'https://api.github.com/repos/dpays/dexplorer-desktop/releases/latest'
 }

@@ -1,4 +1,4 @@
-export default ($scope, $rootScope, $uibModalInstance, activeUsername, steemAuthenticatedService, content, voteWeight) => {
+export default ($scope, $rootScope, $uibModalInstance, activeUsername, dpayAuthenticatedService, content, voteWeight) => {
 
   $scope.slider = {
     value: voteWeight ? (voteWeight / 100) : 100,
@@ -20,7 +20,7 @@ export default ($scope, $rootScope, $uibModalInstance, activeUsername, steemAuth
     const sliderVal = $scope.slider.value;
     const weight = parseInt(sliderVal * 100);
 
-    steemAuthenticatedService.vote(content.author, content.permlink, weight).then((resp) => {
+    dpayAuthenticatedService.vote(content.author, content.permlink, weight).then((resp) => {
       $uibModalInstance.dismiss(weight);
     }).catch((e) => {
       $rootScope.showError(`Error${e.message ? ': ' + e.message : ''}`);

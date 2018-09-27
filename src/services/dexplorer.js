@@ -9,7 +9,7 @@ export default ($http, API_END_POINT, SEARCH_API_URL, SEARCH_API_TOKEN) => {
         username: username,
         author: content.author,
         permlink: content.permlink,
-        chain: 'steem'
+        chain: 'dpay'
       });
     },
     getBookmarks: function (user) {
@@ -23,7 +23,7 @@ export default ($http, API_END_POINT, SEARCH_API_URL, SEARCH_API_TOKEN) => {
       fData.append('postimage', file);
 
       return $http({
-        url: 'https://img.esteem.ws/backend.php',
+        url: 'https://img.dexplorer.io/backend.php',
         method: 'POST',
         data: fData,
         uploadEventHandlers: {
@@ -79,7 +79,7 @@ export default ($http, API_END_POINT, SEARCH_API_URL, SEARCH_API_TOKEN) => {
         post_type: operationType,
         upvote_this: upvote,
         schedule: scheduleDate,
-        chain: 'steem'
+        chain: 'dpay'
       });
     },
     getSchedules: function (user) {

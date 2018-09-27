@@ -25,12 +25,12 @@ describe('Controller helper', () => {
   });
 
   it('formatStrAmount', () => {
-    expect(formatStrAmount('0.10', 'STEEM')).to.deep.equal('0.100 STEEM');
-    expect(formatStrAmount('0.001', 'SBD')).to.deep.equal('0.001 SBD');
-    expect(formatStrAmount('1', 'STEEM')).to.deep.equal('1.000 STEEM');
-    expect(formatStrAmount('10', 'SBD')).to.deep.equal('10.000 SBD');
-    expect(formatStrAmount('2.0', 'SBD')).to.deep.equal('2.000 SBD');
-    expect(formatStrAmount('100', 'STEEM')).to.deep.equal('100.000 STEEM');
+    expect(formatStrAmount('0.10', 'BEX')).to.deep.equal('0.100 BEX');
+    expect(formatStrAmount('0.001', 'BBD')).to.deep.equal('0.001 BBD');
+    expect(formatStrAmount('1', 'BEX')).to.deep.equal('1.000 BEX');
+    expect(formatStrAmount('10', 'BBD')).to.deep.equal('10.000 BBD');
+    expect(formatStrAmount('2.0', 'BBD')).to.deep.equal('2.000 BBD');
+    expect(formatStrAmount('100', 'BEX')).to.deep.equal('100.000 BEX');
   });
 
 

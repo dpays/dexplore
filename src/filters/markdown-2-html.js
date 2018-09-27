@@ -78,7 +78,7 @@ export const markDown2Html = (input) => {
   const copiedPostRegex = /\/(.*)\/(@[\w\.\d-]+)\/(.*)/i;
   const youTubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([^& \n<]+)(?:[^ \n<]+)?/g;
   const vimeoRegex = /(https?:\/\/)?(www\.)?(?:vimeo)\.com.*(?:videos|video|channels|)\/([\d]+)/i;
-  const dTubeRegex = /(https?:\/\/d.tube.#!\/v\/)(\w+)\/(\w+)/g;
+  const dVideoRegex = /(https?:\/\/dvideo.io.#!\/v\/)(\w+)\/(\w+)/g;
 
   // Create temporary document to manipulate html
   let dom = new JSDOM(output, {
@@ -119,7 +119,7 @@ export const markDown2Html = (input) => {
       f = true;
     }
 
-    // If a steem post
+    // If a dPay post
     if (!f) {
       const postMatch = href.match(postRegex);
       if (postMatch) {
@@ -183,20 +183,20 @@ export const markDown2Html = (input) => {
       }
     }
 
-    // If a d.tube video
+    // If a dvideo.io video
     if (!f) {
-      const match = href.match(dTubeRegex);
+      const match = href.match(dVideoRegex);
       if (match) {
-        // Only d.tube links contains an image
+        // Only dvideo.io links contains an image
         const imgEls = el.querySelectorAll('img');
         if (el.textContent === href || imgEls.length === 1) {
-          const e = dTubeRegex.exec(href);
+          const e = dVideoRegex.exec(href);
           // e[2] = username, e[3] object id
           if (e[2] && e[3]) {
-            el.className = 'markdown-video-link markdown-video-link-dtube';
+            el.className = 'markdown-video-link markdown-video-link-dvideo';
             el.removeAttribute('href');
 
-            const embedSrc = `https://emb.d.tube/#!/${e[2]}/${e[3]}`;
+            const embedSrc = `https://emb.dvideo.io/#!/${e[2]}/${e[3]}`;
             el.innerHTML = `<iframe frameborder='0' allowfullscreen src='${embedSrc}'></iframe>`;
             f = true;
           }
@@ -205,7 +205,7 @@ export const markDown2Html = (input) => {
     }
 
     if (!f) {
-      if (href.indexOf('https://steemit.com/~witnesses') === 0 || href.indexOf('https://steemconnect.com/sign/account-witness-vote?witness=') === 0) {
+      if (href.indexOf('https://dsite.io/~witnesses') === 0 || href.indexOf('https://go.dpayid.io/sign/account-witness-vote?witness=') === 0) {
         el.className = 'markdown-witnesses-link';
 
         el.setAttribute('data-href', href);
@@ -215,9 +215,9 @@ export const markDown2Html = (input) => {
       }
     }
 
-    // Convert image links using steemitimages proxy
+    // Convert image links using dSiteImages proxy
     if (!f) {
-      if (href.trim().indexOf('https://steemitimages.com/0x0/') === 0) {
+      if (href.trim().indexOf('https://dsiteimages.com/0x0/') === 0) {
         el.setAttribute('data-href', href);
         el.removeAttribute('href');
 

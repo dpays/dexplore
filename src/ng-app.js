@@ -77,7 +77,7 @@ window.protocolHandler = (url) => {
 
 import env from "env";
 import jetpack from "fs-jetpack";
-import steem from 'steem';
+import dpay from 'dpayjs';
 import path from 'path';
 import jq from 'jquery';
 import {protocolUrl2Obj} from './helpers/protocol';
@@ -167,13 +167,13 @@ import activitiesPopoverDir from './directives/activities-popover';
 
 
 // Services
-import steemService from './services/steem';
+import dpayService from './services/dpay';
 import {helperService} from './services/helper';
 import storageService from './services/storage';
 import settingsService from './services/settings';
 import userService from './services/user';
-import steemAuthenticatedService from './services/steem-authenticated';
-import eSteemService from './services/esteem';
+import dpayAuthenticatedService from './services/dpay-authenticated';
+import dExplorerService from './services/dexplorer';
 import editorService from './services/editor';
 import cryptoService from './services/crypto';
 import pinService from './services/pin'
@@ -190,8 +190,8 @@ import {capWordFilter} from './filters/cap-word';
 import currencySymbolFilter from './filters/currency-symbol';
 import dateFormattedDir from './filters/date-formatted.js';
 import {contentSummaryChildFilter} from './filters/content-summary-child';
-import steemPowerFilter from './filters/steem-power';
-import steemDollarFilter from './filters/steem-dollar';
+import dpayPowerFilter from './filters/dpay-power';
+import dpayDollarFilter from './filters/dpay-dollar';
 import {appNameFilter} from './filters/app-name';
 import transferMemoFilter from './filters/transfer-memo';
 import commentBodyFilter from './filters/comment-body';
@@ -204,7 +204,7 @@ import {version, releasePost} from '../package.json'
 
 const app = remote.app;
 
-const ngApp = angular.module('eSteem', ['ngRoute', 'ui.bootstrap', 'pascalprecht.translate', 'rzModule']);
+const ngApp = angular.module('dExplorer', ['ngRoute', 'ui.bootstrap', 'pascalprecht.translate', 'rzModule']);
 
 import config from './config';
 
@@ -390,20 +390,20 @@ ngApp.config(($translateProvider, $routeProvider, $httpProvider) => {
   .factory('appVersion', () => {
     return version;
   })
-  .factory('steemApi', () => {
+  .factory('dpayApi', () => {
     return {
       getApi: () => {
-        return steem.api;
+        return dpay.api;
       },
       setServer: (u) => {
-        steem.api.stop();
-        steem.api.setOptions({url: u});
+        dpay.api.stop();
+        dpay.api.setOptions({url: u});
       }
     }
   })
-  .factory('eSteemService', eSteemService)
-  .factory('steemService', steemService)
-  .factory('steemAuthenticatedService', steemAuthenticatedService)
+  .factory('dExplorerService', dExplorerService)
+  .factory('dpayService', dpayService)
+  .factory('dpayAuthenticatedService', dpayAuthenticatedService)
   .factory('storageService', storageService)
   .factory('settingsService', settingsService)
   .factory('userService', userService)
@@ -526,8 +526,8 @@ ngApp.config(($translateProvider, $routeProvider, $httpProvider) => {
   .filter('currencySymbol', currencySymbolFilter)
   .filter('dateFormatted', dateFormattedDir)
   .filter('contentSummaryChild', contentSummaryChildFilter)
-  .filter('steemPower', steemPowerFilter)
-  .filter('steemDollar', steemDollarFilter)
+  .filter('dpayPower', dpayPowerFilter)
+  .filter('dpayDollar', dpayDollarFilter)
   .filter('appName', appNameFilter)
   .filter('money2Number', () => {
     return (input) => {
@@ -542,7 +542,7 @@ ngApp.config(($translateProvider, $routeProvider, $httpProvider) => {
   .filter('commentBody', commentBodyFilter)
   .filter('__', __)
 
-  .run(function ($rootScope, $uibModal, $routeParams, $filter, $translate, $timeout, $interval, $location, $window, $q, $http, eSteemService, steemService, steemAuthenticatedService, settingsService, userService, activeUsername, activePostFilter, steemApi, pinService, constants, NWS_ADDRESS) {
+  .run(function ($rootScope, $uibModal, $routeParams, $filter, $translate, $timeout, $interval, $location, $window, $q, $http, dExplorerService, dpayService, dpayAuthenticatedService, settingsService, userService, activeUsername, activePostFilter, dpayApi, pinService, constants, NWS_ADDRESS) {
 
 
     // SETTINGS
@@ -591,15 +591,15 @@ ngApp.config(($translateProvider, $routeProvider, $httpProvider) => {
       }
     });
 
-    // Set steem api server address initially
-    steemApi.setServer($rootScope.server);
+    // Set dPay api server address initially
+    dpayApi.setServer($rootScope.server);
 
     // CURRENCY
     // Default currency's (USD) rate = 1
     $rootScope.currencyRate = 1;
 
     const fetchCurrencyRate = (broadcast = false) => {
-      eSteemService.getCurrencyRate($rootScope.currency).then((resp) => {
+      dExplorerService.getCurrencyRate($rootScope.currency).then((resp) => {
         let newCurrRate = resp.data;
         if (newCurrRate !== $rootScope.currencyRate) {
           $rootScope.currencyRate = newCurrRate;
@@ -618,34 +618,34 @@ ngApp.config(($translateProvider, $routeProvider, $httpProvider) => {
     // Refresh currency rate in every minute. Broadcast if changed.
     $interval(() => fetchCurrencyRate(true), 60000);
 
-    // STEEM GLOBAL PROPERTIES
-    $rootScope.steemPerMVests = 1;
+    // DPAY GLOBAL PROPERTIES
+    $rootScope.dpayPerMVests = 1;
     $rootScope.base = 1;
     $rootScope.fundRecentClaims = 1;
     $rootScope.fundRewardBalance = 1;
 
-    const fetchSteemGlobalProperties = () => {
-      steemService.getDynamicGlobalProperties()
+    const fetchDPayGlobalProperties = () => {
+      dpayService.getDynamicGlobalProperties()
         .then(r => {
-          let steemPerMVests = (Number(r.total_vesting_fund_steem.substring(0, r.total_vesting_fund_steem.length - 6)) / Number(r.total_vesting_shares.substring(0, r.total_vesting_shares.length - 6))) * 1e6;
-          $rootScope.steemPerMVests = steemPerMVests;
+          let dpayPerMVests = (Number(r.total_vesting_fund_dpay.substring(0, r.total_vesting_fund_dpay.length - 6)) / Number(r.total_vesting_shares.substring(0, r.total_vesting_shares.length - 6))) * 1e6;
+          $rootScope.dpayPerMVests = dpayPerMVests;
 
-          return steemService.getFeedHistory()
+          return dpayService.getFeedHistory()
         })
         .then(r => {
           let base = r.current_median_history.base.split(" ")[0];
           $rootScope.base = base;
-          return steemService.getRewardFund();
+          return dpayService.getRewardFund();
         }).then(r => {
         $rootScope.fundRecentClaims = r.recent_claims;
         $rootScope.fundRewardBalance = r.reward_balance.split(" ")[0];
       })
     };
 
-    fetchSteemGlobalProperties();
+    fetchDPayGlobalProperties();
 
     // Refresh global properties in every minute.
-    $interval(() => fetchSteemGlobalProperties(), 60000);
+    $interval(() => fetchDPayGlobalProperties(), 60000);
 
     // Last logged user
     $rootScope.user = userService.getActive();
@@ -667,7 +667,7 @@ ngApp.config(($translateProvider, $routeProvider, $httpProvider) => {
         $rootScope.userProps = null;
         return;
       }
-      steemService.getAccounts([a]).then(r => {
+      dpayService.getAccounts([a]).then(r => {
         $rootScope.userProps = r[0];
         $rootScope.$broadcast('userPropsRefreshed');
       });
@@ -689,7 +689,7 @@ ngApp.config(($translateProvider, $routeProvider, $httpProvider) => {
       $rootScope.userProps = null;
 
       // Redirect root path (/trending) if current page is feed after logout
-      // https://github.com/esteemapp/esteem-surfer/issues/89
+      // https://github.com/dpays/dexplorer-desktop/issues/89
       if ($rootScope.curCtrl === 'feedCtrl') {
         $location.path('/');
       }
@@ -860,7 +860,7 @@ ngApp.config(($translateProvider, $routeProvider, $httpProvider) => {
     $rootScope.bookmarks = [];
     const fetchBookmarks = () => {
       $rootScope.bookmarks = [];
-      eSteemService.getBookmarks($rootScope.user.username).then((resp) => {
+      dExplorerService.getBookmarks($rootScope.user.username).then((resp) => {
         let temp = [];
 
         // Create timestamps and search titles for each bookmark item. Timestamps will be used for sorting.
@@ -899,7 +899,7 @@ ngApp.config(($translateProvider, $routeProvider, $httpProvider) => {
     $rootScope.favorites = [];
     const fetchFavorites = () => {
       $rootScope.favorites = [];
-      eSteemService.getFavorites($rootScope.user.username).then((resp) => {
+      dExplorerService.getFavorites($rootScope.user.username).then((resp) => {
         let temp = [];
 
         // Create timestamps and search titles for each bookmark item. Timestamps will be used for sorting.
@@ -951,7 +951,7 @@ ngApp.config(($translateProvider, $routeProvider, $httpProvider) => {
     };
 
     $rootScope.$on('CONTENT_VOTED', (r, d) => {
-      steemService.getContent(d.author, d.permlink).then(resp => {
+      dpayService.getContent(d.author, d.permlink).then(resp => {
         $rootScope.refreshContent(resp);
       });
     });
@@ -1075,7 +1075,7 @@ ngApp.config(($translateProvider, $routeProvider, $httpProvider) => {
       }
 
       if (obj.type === 'post') {
-        steemService.getContent(obj.author, obj.permlink).then(resp => {
+        dpayService.getContent(obj.author, obj.permlink).then(resp => {
           if (resp.id) {
             $rootScope.selectedPost = null;
             const u = `/post/${obj.cat}/${obj.author}/${obj.permlink}`;
@@ -1086,7 +1086,7 @@ ngApp.config(($translateProvider, $routeProvider, $httpProvider) => {
       }
 
       if (obj.type === 'account') {
-        steemService.getAccounts([obj.account]).then(resp => {
+        dpayService.getAccounts([obj.account]).then(resp => {
           if (resp.length === 1) {
             const u = `/account/${obj.account}`;
             $location.path(u);
@@ -1096,19 +1096,19 @@ ngApp.config(($translateProvider, $routeProvider, $httpProvider) => {
       }
     };
 
-    // Steem connect token expire control
+    // dPayID token expire control
     const checkSCToken = () => {
       const user = userService.getActive();
       if (user && user.type === 'sc' && $rootScope.pinCode) {
-        steemAuthenticatedService.meSc().then(resp => {
+        dpayAuthenticatedService.meSc().then(resp => {
 
         }).catch((e) => {
-          if (e.toString().trim() === 'SDKError: sc2-sdk error') {
+          if (e.toString().trim() === 'SDKError: dpayid error') {
             userService.setActive(null);
             $rootScope.$broadcast('userLoggedOut');
             $location.path('/');
 
-            $window.alert($filter('__')('Looks like your steem connect access token expired. Please login again.'));
+            $window.alert($filter('__')('Looks like your dPayID access token expired. Please login again.'));
           }
         });
       }
@@ -1209,7 +1209,7 @@ ngApp.config(($translateProvider, $routeProvider, $httpProvider) => {
 
     $rootScope.unreadActivities = 0;
     const fetchUnreadActivityCount = () => {
-      eSteemService.getUnreadActivityCount(activeUsername()).then((resp) => {
+      dExplorerService.getUnreadActivityCount(activeUsername()).then((resp) => {
         $rootScope.unreadActivities = resp.data.count;
       });
     };

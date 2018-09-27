@@ -1,6 +1,6 @@
 export const postUrlParser = (url) => {
 
-  const parseSteemit = (url) => {
+  const parseDSite = (url) => {
     const r = /^https?:\/\/(.*)\/(.*)\/(@[\w\.\d-]+)\/(.*)/i;
     const match = url.match(r);
     if (match && match.length === 5) {
@@ -13,7 +13,7 @@ export const postUrlParser = (url) => {
     return null;
   };
 
-  const parseBusy = (url) => {
+  const parseDSocial = (url) => {
     const r = /^https?:\/\/(.*)\/(@[\w\.\d-]+)\/(.*)/i;
     const match = url.match(r);
     if (match && match.length === 4) {
@@ -26,15 +26,15 @@ export const postUrlParser = (url) => {
     return null;
   };
 
-  if (url.startsWith('https://steemit.com')) {
-    return parseSteemit(url);
+  if (url.startsWith('https://dsite.io')) {
+    return parseDSite(url);
   }
 
-  if (url.startsWith('https://busy.org')) {
-    return parseBusy(url);
+  if (url.startsWith('https://dsocial.io')) {
+    return parseDSocial(url);
   }
 
-  // For non url's like @good-karma/esteem-london-presentation-e3105ba6637ed
+  // For non url's like @dweb/freedom-series-part-3-the-dweb
   const match = url.match(/^(@[\w\.\d-]+)\/(.*)/);
   if (match && match.length === 3) {
     return {

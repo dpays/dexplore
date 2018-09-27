@@ -13,8 +13,8 @@ export default () => {
     template: `
       <div class="post-list-item with-image" ng-init="postImage = (post | catchPostImage)" ng-class="{'visited-post': isVisited}">
         <div class="post-header">
-            <div class="post-resteemed" ng-if="reSteemed"><i class="fa fa-retweet"></i> {{ 'RESTEEMED' | __  }}</div>
-            <div class="post-resteemed" ng-if="reSteemedBy"><i class="fa fa-retweet"></i> {{ 'RESTEEMED_BY' | __  }} {{ reSteemedBy }}</div>
+            <div class="post-reposted" ng-if="rePosted"><i class="fa fa-retweet"></i> {{ 'REPOSTED' | __  }}</div>
+            <div class="post-reposted" ng-if="rePostedBy"><i class="fa fa-retweet"></i> {{ 'REPOSTED_BY' | __  }} {{ rePostedBy }}</div>
             <div class="post-info-bar">
                 <div class="post-author-pic" author-bg-img-style author="{{ post.author }}"></div>
                 <div class="post-info-right-side">
@@ -61,10 +61,10 @@ export default () => {
         </div>
     </div>
     `,
-    controller: ($scope, $rootScope, $location, $sce, $filter, $uibModal, storageService, helperService, activePostFilter, activeUsername, steemService, steemAuthenticatedService, $confirm) => {
+    controller: ($scope, $rootScope, $location, $sce, $filter, $uibModal, storageService, helperService, activePostFilter, activeUsername, dpayService, dpayAuthenticatedService, $confirm) => {
       $scope.isVisited = helperService.isPostRead($scope.post.author, $scope.post.permlink);
-      $scope.reSteemed = ($scope.asAuthor && $scope.post.author !== $scope.asAuthor);
-      $scope.reSteemedBy = ($scope.post.reblogged_by && $scope.post.reblogged_by.length > 0 ? $scope.post.reblogged_by[0] : null);
+      $scope.rePosted = ($scope.asAuthor && $scope.post.author !== $scope.asAuthor);
+      $scope.rePostedBy = ($scope.post.reblogged_by && $scope.post.reblogged_by.length > 0 ? $scope.post.reblogged_by[0] : null);
 
       let jsonMeta = {};
       try {
@@ -120,7 +120,7 @@ export default () => {
       if (!$scope.reblogged &&
         $scope.canReblog &&
         activeUser) {
-        steemService.getDiscussionsBy('Blog', activeUser, null, null, 20).then((contents) => {
+        dpayService.getDiscussionsBy('Blog', activeUser, null, null, 20).then((contents) => {
           for (let content of contents) {
             if (content.author === author && content.permlink === permlink) {
               helperService.setPostReblogged(activeUser, author, permlink);
@@ -133,7 +133,7 @@ export default () => {
       $scope.reblog = () => {
         $confirm($filter('translate')('ARE_YOU_SURE'), null, () => {
           $scope.reblogged = true;
-          steemAuthenticatedService.reblog(author, permlink).then(() => {
+          dpayAuthenticatedService.reblog(author, permlink).then(() => {
             helperService.setPostReblogged(activeUser, author, permlink);
           }).catch((e) => {
             $scope.reblogged = false;

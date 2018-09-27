@@ -1,4 +1,4 @@
-import steem from 'steem';
+import dpay from 'dpayjs';
 
 export default ($rootScope, cryptoService) => {
   const commentBodyFilter = (comment) => {
@@ -29,7 +29,7 @@ export default ($rootScope, cryptoService) => {
       return '*encrypted comment*'
     }
 
-    // Requires traditional steem login
+    // Requires traditional dPayID login
     if ($rootScope.user.type === 'sc') {
       return '*encrypted comment. use traditional login to see comment.*'
     }
@@ -49,7 +49,7 @@ export default ($rootScope, cryptoService) => {
 
     // Decode
     try {
-      const d = steem.memo.decode(privateMemoKey, comment.body);
+      const d = dpay.memo.decode(privateMemoKey, comment.body);
       return d.replace('#', '');
     } catch (e) {
       return '*encrypted comment*'
@@ -59,5 +59,3 @@ export default ($rootScope, cryptoService) => {
   commentBodyFilter.$stateful = true;
   return commentBodyFilter;
 };
-
-

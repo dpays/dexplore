@@ -1,4 +1,4 @@
-export default (steemApi, $q) => {
+export default (dpayApi, $q) => {
   return {
     getDiscussionsBy: (what, tag, startAuthor, startPermalink, limit = 20) => {
       let defer = $q.defer();
@@ -7,7 +7,7 @@ export default (steemApi, $q) => {
 
       let params = {tag: tag, start_author: startAuthor, start_permlink: startPermalink, limit: limit};
 
-      steemApi.getApi()[fn](params, (err, response) => {
+      dpayApi.getApi()[fn](params, (err, response) => {
         if (err) {
           defer.reject(err);
         } else {
@@ -20,7 +20,7 @@ export default (steemApi, $q) => {
     getRepliesByLastUpdate: (startAuthor, startPermalink, limit = 20) => {
       let defer = $q.defer();
 
-      steemApi.getApi().getRepliesByLastUpdate(startAuthor, startPermalink, limit, (err, response) => {
+      dpayApi.getApi().getRepliesByLastUpdate(startAuthor, startPermalink, limit, (err, response) => {
         if (err) {
           defer.reject(err);
         } else {
@@ -33,7 +33,7 @@ export default (steemApi, $q) => {
     getTrendingTags: (afterTag = null, limit = 50) => {
       let defer = $q.defer();
 
-      steemApi.getApi().getTrendingTags((afterTag.trim().length > 0 ? afterTag.trim() : null), limit, (err, response) => {
+      dpayApi.getApi().getTrendingTags((afterTag.trim().length > 0 ? afterTag.trim() : null), limit, (err, response) => {
         if (err) {
           defer.reject(err);
         } else {
@@ -46,7 +46,7 @@ export default (steemApi, $q) => {
     getActiveVotesAsync: (author, permLink) => {
       let defer = $q.defer();
 
-      steemApi.getApi().getActiveVotesAsync(author, permLink, (err, response) => {
+      dpayApi.getApi().getActiveVotesAsync(author, permLink, (err, response) => {
         if (err) {
           defer.reject(err);
         } else {
@@ -59,7 +59,7 @@ export default (steemApi, $q) => {
     getContent: (author, permLink) => {
       let defer = $q.defer();
 
-      steemApi.getApi().getContent(author, permLink, (err, response) => {
+      dpayApi.getApi().getContent(author, permLink, (err, response) => {
         if (err) {
           defer.reject(err);
         } else {
@@ -71,7 +71,7 @@ export default (steemApi, $q) => {
     getState: (path) => {
       let defer = $q.defer();
 
-      steemApi.getApi().getState(path, (err, response) => {
+      dpayApi.getApi().getState(path, (err, response) => {
         if (err) {
           defer.reject(err);
         } else {
@@ -83,7 +83,7 @@ export default (steemApi, $q) => {
     getAccounts: (names) => {
       let defer = $q.defer();
 
-      steemApi.getApi().getAccounts(names, (err, response) => {
+      dpayApi.getApi().getAccounts(names, (err, response) => {
         if (err) {
           defer.reject(err);
         } else {
@@ -96,7 +96,7 @@ export default (steemApi, $q) => {
     getContentReplies: (author, parentPermlink) => {
       let defer = $q.defer();
 
-      steemApi.getApi().getContentReplies(author, parentPermlink, (err, response) => {
+      dpayApi.getApi().getContentReplies(author, parentPermlink, (err, response) => {
 
         if (err) {
           defer.reject(err);
@@ -109,7 +109,7 @@ export default (steemApi, $q) => {
     getFollowCount: (author) => {
       let defer = $q.defer();
 
-      steemApi.getApi().getFollowCount(author, (err, response) => {
+      dpayApi.getApi().getFollowCount(author, (err, response) => {
 
         if (err) {
           defer.reject(err);
@@ -122,7 +122,7 @@ export default (steemApi, $q) => {
     getDynamicGlobalProperties: () => {
       let defer = $q.defer();
 
-      steemApi.getApi().getDynamicGlobalPropertiesAsync((err, response) => {
+      dpayApi.getApi().getDynamicGlobalPropertiesAsync((err, response) => {
 
         if (err) {
           defer.reject(err);
@@ -135,7 +135,7 @@ export default (steemApi, $q) => {
     getFeedHistory: () => {
       let defer = $q.defer();
 
-      steemApi.getApi().getFeedHistoryAsync((err, response) => {
+      dpayApi.getApi().getFeedHistoryAsync((err, response) => {
 
         if (err) {
           defer.reject(err);
@@ -147,7 +147,7 @@ export default (steemApi, $q) => {
     },
     getFollowing: (follower, startFollowing, followType = 'blog', limit = 100) => {
       let defer = $q.defer();
-      steemApi.getApi().getFollowing(follower, startFollowing, followType, limit, (err, response) => {
+      dpayApi.getApi().getFollowing(follower, startFollowing, followType, limit, (err, response) => {
         if (err) {
           defer.reject(err);
         } else {
@@ -158,7 +158,7 @@ export default (steemApi, $q) => {
     },
     getFollowers: (following, startFollower, followType = 'blog', limit = 100) => {
       let defer = $q.defer();
-      steemApi.getApi().getFollowers(following, startFollower, followType, limit, (err, response) => {
+      dpayApi.getApi().getFollowers(following, startFollower, followType, limit, (err, response) => {
         if (err) {
           defer.reject(err);
         } else {
@@ -169,7 +169,7 @@ export default (steemApi, $q) => {
     },
     getRewardFund: (name = 'post') => {
       let defer = $q.defer();
-      steemApi.getApi().getRewardFund(name, (err, response) => {
+      dpayApi.getApi().getRewardFund(name, (err, response) => {
         if (err) {
           defer.reject(err);
         } else {
@@ -180,7 +180,7 @@ export default (steemApi, $q) => {
     },
     lookupAccounts: (q, size) => {
       let defer = $q.defer();
-      steemApi.getApi().lookupAccounts(q, size, (err, response) => {
+      dpayApi.getApi().lookupAccounts(q, size, (err, response) => {
         if (err) {
           defer.reject(err);
         } else {
@@ -191,7 +191,7 @@ export default (steemApi, $q) => {
     },
     getBlock: (num) => {
       let defer = $q.defer();
-      steemApi.getApi().getBlock(num, (err, response) => {
+      dpayApi.getApi().getBlock(num, (err, response) => {
         if (err) {
           defer.reject(err);
         } else {
@@ -202,7 +202,7 @@ export default (steemApi, $q) => {
     },
     getWithdrawRoutes: (account) => {
       let defer = $q.defer();
-      steemApi.getApi().getWithdrawRoutes(account, 'outgoing', (err, response) => {
+      dpayApi.getApi().getWithdrawRoutes(account, 'outgoing', (err, response) => {
         if (err) {
           defer.reject(err);
         } else {
@@ -213,7 +213,7 @@ export default (steemApi, $q) => {
     },
     getWitnessesByVote: (from = null, limit = 100) => {
       let defer = $q.defer();
-      steemApi.getApi().getWitnessesByVote(from, limit, (err, response) => {
+      dpayApi.getApi().getWitnessesByVote(from, limit, (err, response) => {
         if (err) {
           defer.reject(err);
         } else {
@@ -224,7 +224,7 @@ export default (steemApi, $q) => {
     },
     getVestingDelegations: (account, from=null, limit=50) => {
       let defer = $q.defer();
-      steemApi.getApi().getVestingDelegations(account, from, limit, (err, response) => {
+      dpayApi.getApi().getVestingDelegations(account, from, limit, (err, response) => {
         if (err) {
           defer.reject(err);
         } else {

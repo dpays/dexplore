@@ -19,19 +19,19 @@ describe('App Name Filter', () => {
   });
 
   it('Should return app name if string', () => {
-    let input = 'esteem';
-    let expected = 'esteem';
+    let input = 'dexplorer';
+    let expected = 'dexplorer';
     expect(appName(input)).to.equal(expected);
   });
 
   it('Should return app name if object', () => {
-    let input = {"name": "esteem-surfer"};
-    let expected = 'esteem-surfer';
+    let input = {"name": "dexplorer-desktop"};
+    let expected = 'dexplorer-desktop';
     expect(appName(input)).to.equal(expected);
   });
 
   it('Should return empty string if given object has no "name" property', () => {
-    let input = {"na": "esteem-surfer"};
+    let input = {"na": "dexplorer-desktop"};
     let expected = '';
     expect(appName(input)).to.equal(expected);
   });

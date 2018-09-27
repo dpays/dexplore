@@ -1,4 +1,4 @@
-export default ($scope, $rootScope, $routeParams, $timeout, $q, $location, $window, $uibModal, $filter, steemService, eSteemService, steemAuthenticatedService, activeUsername, constants) => {
+export default ($scope, $rootScope, $routeParams, $timeout, $q, $location, $window, $uibModal, $filter, dpayService, dExplorerService, dpayAuthenticatedService, activeUsername, constants) => {
   let username = $routeParams.username;
   let section = $routeParams.section || 'blog';
 
@@ -50,7 +50,7 @@ export default ($scope, $rootScope, $routeParams, $timeout, $q, $location, $wind
     if (!refresh && $rootScope.lastAuthorData && $rootScope.lastAuthorData.name === username) {
       account = $rootScope.lastAuthorData;
     } else {
-      account = await steemService.getAccounts([username]).then(resp => {
+      account = await dpayService.getAccounts([username]).then(resp => {
         if (resp.length > 0) {
           return resp[0];
         }
@@ -71,7 +71,7 @@ export default ($scope, $rootScope, $routeParams, $timeout, $q, $location, $wind
         } catch (e) {
         }
 
-        let resp = await steemService.getFollowCount(username).then(resp => {
+        let resp = await dpayService.getFollowCount(username).then(resp => {
           return resp;
         }).catch((e) => {
           // TODO: Show error
@@ -90,13 +90,13 @@ export default ($scope, $rootScope, $routeParams, $timeout, $q, $location, $wind
     $scope.loadingAuthor = false;
     $scope.$applyAsync();
 
-    $scope.hasUnclaimedRewards = ($scope.authorData.reward_steem_balance.split(' ')[0] > 0) ||
-      ($scope.authorData.reward_sbd_balance.split(' ')[0] > 0) ||
-      ($scope.authorData.reward_vesting_steem.split(' ')[0] > 0);
+    $scope.hasUnclaimedRewards = ($scope.authorData.reward_dpay_balance.split(' ')[0] > 0) ||
+      ($scope.authorData.reward_bbd_balance.split(' ')[0] > 0) ||
+      ($scope.authorData.reward_vesting_dpay.split(' ')[0] > 0);
 
     $scope.$applyAsync();
 
-    eSteemService.getActiveVotes(username).then((resp) => {
+    dExplorerService.getActiveVotes(username).then((resp) => {
       $scope.votesIn24 = resp.data.count;
     });
   };
@@ -138,7 +138,7 @@ export default ($scope, $rootScope, $routeParams, $timeout, $q, $location, $wind
         let muted = false;
 
         // Is following
-        let resp = await steemService.getFollowing(visitorName, username, 'blog', 1).then((resp) => {
+        let resp = await dpayService.getFollowing(visitorName, username, 'blog', 1).then((resp) => {
           return resp;
         }).catch((e) => {
           // TODO: Handle error
@@ -151,7 +151,7 @@ export default ($scope, $rootScope, $routeParams, $timeout, $q, $location, $wind
         }
 
         // Is muted
-        resp = await steemService.getFollowing(visitorName, username, 'ignore', 1).then((resp) => {
+        resp = await dpayService.getFollowing(visitorName, username, 'ignore', 1).then((resp) => {
           return resp;
         }).catch((e) => {
           // TODO: Handle error
@@ -176,7 +176,7 @@ export default ($scope, $rootScope, $routeParams, $timeout, $q, $location, $wind
       $scope.$applyAsync();
     }
 
-    eSteemService.isFavorite(visitorName, username).then((resp) => {
+    dExplorerService.isFavorite(visitorName, username).then((resp) => {
       $scope.visitorData.favorited = resp.data;
     });
 
@@ -193,13 +193,13 @@ export default ($scope, $rootScope, $routeParams, $timeout, $q, $location, $wind
     let prms = null;
     switch (section) {
       case 'blog':
-        prms = steemService.getState(`/@${username}/`);
+        prms = dpayService.getState(`/@${username}/`);
         break;
       case 'comments':
-        prms = steemService.getState(`/@${username}/comments`);
+        prms = dpayService.getState(`/@${username}/comments`);
         break;
       case 'replies':
-        prms = steemService.getState(`/@${username}/recent-replies`);
+        prms = dpayService.getState(`/@${username}/recent-replies`);
         break;
     }
 
@@ -240,20 +240,20 @@ export default ($scope, $rootScope, $routeParams, $timeout, $q, $location, $wind
 
     switch (section) {
       case 'blog':
-        prms = steemService.getDiscussionsBy('Blog', username, startAuthor, startPermalink, constants.postListSize);
+        prms = dpayService.getDiscussionsBy('Blog', username, startAuthor, startPermalink, constants.postListSize);
         break;
       case 'comments':
-        prms = steemService.getDiscussionsBy('Comments', username, startAuthor, startPermalink, constants.postListSize);
+        prms = dpayService.getDiscussionsBy('Comments', username, startAuthor, startPermalink, constants.postListSize);
         break;
       case 'replies':
-        prms = steemService.getRepliesByLastUpdate(startAuthor, startPermalink, constants.postListSize);
+        prms = dpayService.getRepliesByLastUpdate(startAuthor, startPermalink, constants.postListSize);
         break;
     }
 
     prms.then((resp) => {
 
       // if server returned less than 2 posts, it means end of pagination
-      // comparison value is 2 because steem api returns at least 1 post on pagination
+      // comparison value is 2 because dPay api returns at least 1 post on pagination
       if (resp.length < 2) {
         hasMoreContent = false;
         return false;
@@ -295,7 +295,7 @@ export default ($scope, $rootScope, $routeParams, $timeout, $q, $location, $wind
   };
 
   const loadTopPosts = () => {
-    eSteemService.getTopPosts(username).then((resp) => {
+    dExplorerService.getTopPosts(username).then((resp) => {
       $scope.topPosts = resp.data.list.slice(0, 4);
     })
   };
@@ -315,7 +315,7 @@ export default ($scope, $rootScope, $routeParams, $timeout, $q, $location, $wind
 
   const loadTransactions = () => {
     $scope.loadingContents = true;
-    steemService.getState(`/@${username}/transfers`).then(resp => {
+    dpayService.getState(`/@${username}/transfers`).then(resp => {
       if (resp.accounts[username]) {
         let transfers = resp.accounts[username].transfer_history.slice(Math.max(resp.accounts[username].transfer_history.length - 100, 0));
         $scope.dataList = transfers;
@@ -364,7 +364,7 @@ export default ($scope, $rootScope, $routeParams, $timeout, $q, $location, $wind
   $scope.username = username;
 
   // Can be deleted in the future after locale files changed.
-  $scope.translationData = {platformname: 'Steem', platformsunit: "$1.00", platformpower: "Steem Power"};
+  $scope.translationData = {platformname: 'dPay', platformsunit: "$1.00", platformpower: "BEX Power"};
 
   const afterFollow = () => {
     $scope.visitorData.following = true;
@@ -378,7 +378,7 @@ export default ($scope, $rootScope, $routeParams, $timeout, $q, $location, $wind
   $scope.follow = () => {
     $scope.vBlockControl = true;
     $scope.vFollowing = true;
-    steemAuthenticatedService.follow(username).then((resp) => {
+    dpayAuthenticatedService.follow(username).then((resp) => {
       afterFollow();
     }).catch((e) => {
       $rootScope.showError(e);
@@ -400,7 +400,7 @@ export default ($scope, $rootScope, $routeParams, $timeout, $q, $location, $wind
   $scope.unfollow = () => {
     $scope.vBlockControl = true;
     $scope.vUnfollowing = true;
-    steemAuthenticatedService.unfollow(username).then((resp) => {
+    dpayAuthenticatedService.unfollow(username).then((resp) => {
       afterUnfollow();
     }).catch((e) => {
       $rootScope.showError(e);
@@ -422,7 +422,7 @@ export default ($scope, $rootScope, $routeParams, $timeout, $q, $location, $wind
   $scope.mute = () => {
     $scope.vBlockControl = true;
     $scope.vMuting = true;
-    steemAuthenticatedService.mute(username).then((resp) => {
+    dpayAuthenticatedService.mute(username).then((resp) => {
       afterMute();
     }).catch((e) => {
       $rootScope.showError(e);
@@ -444,7 +444,7 @@ export default ($scope, $rootScope, $routeParams, $timeout, $q, $location, $wind
   $scope.unMute = () => {
     $scope.vBlockControl = true;
     $scope.vUnmuting = true;
-    steemAuthenticatedService.unfollow(username).then((resp) => {
+    dpayAuthenticatedService.unfollow(username).then((resp) => {
       afterUnmute();
     }).catch((e) => {
       $rootScope.showError(e);
@@ -456,7 +456,7 @@ export default ($scope, $rootScope, $routeParams, $timeout, $q, $location, $wind
 
   $scope.fav = () => {
     $scope.vFavoriting = true;
-    eSteemService.addFavorite(activeUsername(), username).then((resp) => {
+    dExplorerService.addFavorite(activeUsername(), username).then((resp) => {
       $scope.visitorData.favorited = true;
       $rootScope.$broadcast('favoritesChanged');
     }).catch((e) => {
@@ -468,7 +468,7 @@ export default ($scope, $rootScope, $routeParams, $timeout, $q, $location, $wind
 
   $scope.unFav = () => {
     $scope.vFavoriting = true;
-    eSteemService.removeFavoriteUser(activeUsername(), username).then((resp) => {
+    dExplorerService.removeFavoriteUser(activeUsername(), username).then((resp) => {
       $scope.visitorData.favorited = false;
       $rootScope.$broadcast('favoritesChanged');
     }).catch((e) => {
@@ -514,11 +514,11 @@ export default ($scope, $rootScope, $routeParams, $timeout, $q, $location, $wind
 
   $scope.claimRewardsClicked = () => {
     $scope.claimingRewards = true;
-    const steemBal = $scope.authorData.reward_steem_balance;
-    const sbdBal = $scope.authorData.reward_sbd_balance;
+    const dpayBal = $scope.authorData.reward_dpay_balance;
+    const bbdBal = $scope.authorData.reward_bbd_balance;
     const vestingBal = $scope.authorData.reward_vesting_balance;
 
-    steemAuthenticatedService.claimRewardBalance(steemBal, sbdBal, vestingBal).then(resp => {
+    dpayAuthenticatedService.claimRewardBalance(dpayBal, bbdBal, vestingBal).then(resp => {
       loadAccount(true).then(() => {
         loadContents();
       });
@@ -530,7 +530,7 @@ export default ($scope, $rootScope, $routeParams, $timeout, $q, $location, $wind
   };
 
   $scope.goToPost = (account, permlink) => {
-    steemService.getContent(account, permlink).then((resp) => {
+    dpayService.getContent(account, permlink).then((resp) => {
       $rootScope.selectedPost = resp;
       let u = `/post/${resp.category}/${account}/${permlink}`;
       $location.path(u);
@@ -545,7 +545,7 @@ export default ($scope, $rootScope, $routeParams, $timeout, $q, $location, $wind
   };
 
   $scope.goToComment = (account, permlink) => {
-    steemService.getContent(account, permlink).then((resp) => {
+    dpayService.getContent(account, permlink).then((resp) => {
       $rootScope.selectedPost = null;
       let u = `/post${resp.url.split("#")[0].replace('@', '')}/${resp.id}`;
       $location.path(u);

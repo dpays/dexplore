@@ -1,7 +1,7 @@
 import {amountFormatCheck, formatStrAmount} from './helper';
 import badActors from '../data/bad-actors.json';
 
-export default ($scope, $rootScope, $routeParams, $location, $timeout, $filter, autoCancelTimeout, steemService, steemAuthenticatedService, activeUsername, userService) => {
+export default ($scope, $rootScope, $routeParams, $location, $timeout, $filter, autoCancelTimeout, dpayService, dpayAuthenticatedService, activeUsername, userService) => {
   const curAccount = $routeParams.account;
   const accountList = userService.getAll();
 
@@ -56,7 +56,7 @@ export default ($scope, $rootScope, $routeParams, $location, $timeout, $filter, 
       $scope.toData = null;
       $scope.fetchingTo = true;
 
-      steemService.getAccounts([$scope.to]).then((resp) => {
+      dpayService.getAccounts([$scope.to]).then((resp) => {
         if (resp.length === 0) {
           $scope.toErr = $filter('translate')('NONEXIST_USER');
           return;
@@ -102,7 +102,7 @@ export default ($scope, $rootScope, $routeParams, $location, $timeout, $filter, 
   const loadFromAccount = () => {
     $scope.fetchingFromAccount = true;
 
-    steemService.getAccounts([$scope.from]).then((resp) => {
+    dpayService.getAccounts([$scope.from]).then((resp) => {
       return resp[0];
     }).catch((e) => {
       $rootScope.showError(e);
@@ -134,14 +134,14 @@ export default ($scope, $rootScope, $routeParams, $location, $timeout, $filter, 
     const _submit = () => {
       const from = $scope.from;
       const to = $scope.to.trim();
-      const amount = formatStrAmount($scope.amount, 'STEEM');
+      const amount = formatStrAmount($scope.amount, 'BEX');
 
       const fromAccount = getAccount(from);
       const wif = fromAccount.type === 's' ? fromAccount.keys.active : null;
 
       $scope.processing = true;
 
-      steemAuthenticatedService.transferToVesting(wif, from, to, amount).then((resp) => {
+      dpayAuthenticatedService.transferToVesting(wif, from, to, amount).then((resp) => {
         $rootScope.showSuccess($filter('translate')('TX_BROADCASTED'));
         $location.path(`/account/${from}/wallet`);
       }).catch((e) => {

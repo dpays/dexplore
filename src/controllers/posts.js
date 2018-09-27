@@ -1,4 +1,4 @@
-export default ($scope, $rootScope, $routeParams, $filter, $timeout, $location, steemService, constants) => {
+export default ($scope, $rootScope, $routeParams, $filter, $timeout, $location, dpayService, constants) => {
 
   $scope.posts = $rootScope.Data['posts'] || [];
 
@@ -32,10 +32,10 @@ export default ($scope, $rootScope, $routeParams, $filter, $timeout, $location, 
     let by = $filter('capWord')(filter);
 
     $scope.loadingPosts = true;
-    steemService.getDiscussionsBy(by, (tag ? tag : null), startAuthor, startPermalink, constants.postListSize).then((resp) => {
+    dpayService.getDiscussionsBy(by, (tag ? tag : null), startAuthor, startPermalink, constants.postListSize).then((resp) => {
 
       // if server returned less than 2 posts, it means end of pagination
-      // comparison value is 2 because steem api returns at least 1 post on pagination
+      // comparison value is 2 because dPay api returns at least 1 post on pagination
       if (resp.length < 2) {
         hasMore = false;
         return false;

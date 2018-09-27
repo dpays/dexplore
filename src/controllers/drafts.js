@@ -1,10 +1,10 @@
-export default ($scope, $rootScope, $location, eSteemService, activeUsername) => {
+export default ($scope, $rootScope, $location, dExplorerService, activeUsername) => {
 
   $scope.loadingDrafts = true;
   $scope.drafts = [];
 
   const fetchDrafts = () => {
-    eSteemService.getDrafts(activeUsername()).then((resp) => {
+    dExplorerService.getDrafts(activeUsername()).then((resp) => {
       const d = [];
       for (let i of resp.data) {
         if (i) {

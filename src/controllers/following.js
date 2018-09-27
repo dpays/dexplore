@@ -12,7 +12,7 @@ const prepareFollowingData = (data) => {
   return Object.assign({}, data, {full_name: name})
 };
 
-export default ($scope, $rootScope, $uibModalInstance, accountData, steemService) => {
+export default ($scope, $rootScope, $uibModalInstance, accountData, dpayService) => {
 
   const username = accountData.name;
   const fetchSize = 80;
@@ -27,10 +27,10 @@ export default ($scope, $rootScope, $uibModalInstance, accountData, steemService
     $scope.searching = false;
     $scope.searched = false;
 
-    steemService.getFollowing(username, null, 'blog', fetchSize).then((resp) => {
+    dpayService.getFollowing(username, null, 'blog', fetchSize).then((resp) => {
 
       const accountNames = resp.map(e => e.following);
-      return steemService.getAccounts(accountNames).then((resp) => resp);
+      return dpayService.getAccounts(accountNames).then((resp) => resp);
     }).catch((e) => {
       $rootScope.showError(e);
     }).then((accounts) => {
@@ -62,11 +62,11 @@ export default ($scope, $rootScope, $uibModalInstance, accountData, steemService
     $scope.hasMore = false;
     $scope.searching = true;
 
-    steemService.getFollowing(username, searchUser, 'blog', 1).then((resp) => {
+    dpayService.getFollowing(username, searchUser, 'blog', 1).then((resp) => {
       $scope.searched = true;
 
       if (resp[0].following === searchUser) {
-        return steemService.getAccounts([searchUser]).then((resp) => resp);
+        return dpayService.getAccounts([searchUser]).then((resp) => resp);
       }
     }).catch((e) => {
       $rootScope.showError(e);
@@ -87,10 +87,10 @@ export default ($scope, $rootScope, $uibModalInstance, accountData, steemService
   $scope.loadMore = () => {
     $scope.fetching = true;
     let lastItem = [...$scope.followingList].pop();
-    steemService.getFollowing(username, lastItem.name, 'blog', fetchSize).then((resp) => {
+    dpayService.getFollowing(username, lastItem.name, 'blog', fetchSize).then((resp) => {
 
       const accountNames = resp.map(e => e.following);
-      return steemService.getAccounts(accountNames).then((resp) => resp);
+      return dpayService.getAccounts(accountNames).then((resp) => resp);
     }).catch((e) => {
       $rootScope.showError(e);
     }).then((accounts) => {

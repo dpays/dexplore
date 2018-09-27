@@ -1,6 +1,6 @@
 import chai from "chai";
 import testUtils from "./utils";
-import steem from 'steem';
+import dpay from 'dpayjs';
 
 chai.use(require('chai-string'));
 

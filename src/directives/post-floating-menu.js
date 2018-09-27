@@ -1,11 +1,11 @@
-const strShareSuffix = 'shared via eSteem Surfer';
+const strShareSuffix = 'shared via dExplorer';
 
-const makeSteemitUrl = (cat, author, permlink) => {
-  return `https://steemit.com/${cat}/@${author}/${permlink}`;
+const makeDSiteUrl = (cat, author, permlink) => {
+  return `https://dsite.io/${cat}/@${author}/${permlink}`;
 };
 
-const makeBusyUrl = (author, permlink) => {
-  return `https://busy.org/@${author}/${permlink}`;
+const makeDSocialUrl = (author, permlink) => {
+  return `https://dsocial.io/@${author}/${permlink}`;
 };
 
 const makeCopyAddress = (title, cat, author, permlink) => {
@@ -13,19 +13,19 @@ const makeCopyAddress = (title, cat, author, permlink) => {
 };
 
 const makeShareUrlReddit = (cat, author, permlink, title) => {
-  const u = makeSteemitUrl(cat, author, permlink);
+  const u = makeDSiteUrl(cat, author, permlink);
   const t = `${title} | ${strShareSuffix}`;
   return `https://reddit.com/submit?url=${encodeURIComponent(u)}&title=${encodeURIComponent(t)}`;
 };
 
 const makeShareUrlTwitter = (cat, author, permlink, title) => {
-  const u = makeSteemitUrl(cat, author, permlink);
+  const u = makeDSiteUrl(cat, author, permlink);
   const t = `${title} | ${strShareSuffix}`;
   return `https://twitter.com/intent/tweet?url=${encodeURIComponent(u)}&text=${encodeURIComponent(t)}`;
 };
 
 const makeShareUrlFacebook = (cat, author, permlink) => {
-  const u = makeSteemitUrl(cat, author, permlink);
+  const u = makeDSiteUrl(cat, author, permlink);
   return `https://www.facebook.com/sharer.php?u=${encodeURIComponent(u)}`;
 };
 
@@ -61,7 +61,7 @@ export default () => {
       });
     },
     templateUrl: 'templates/directives/post-floating-menu.html',
-    controller: ($scope, $rootScope, $timeout, $filter, $uibModal, $confirm, steemAuthenticatedService, steemService, eSteemService, helperService, activeUsername) => {
+    controller: ($scope, $rootScope, $timeout, $filter, $uibModal, $confirm, dpayAuthenticatedService, dpayService, dExplorerService, helperService, activeUsername) => {
       const activeUser = activeUsername();
 
       const author = $scope.content.author;
@@ -81,7 +81,7 @@ export default () => {
       if (!$scope.reblogged &&
         $scope.canReblog &&
         activeUser) {
-        steemService.getDiscussionsBy('Blog', activeUser, null, null, 20).then((contents) => {
+        dpayService.getDiscussionsBy('Blog', activeUser, null, null, 20).then((contents) => {
           for (let content of contents) {
             if (content.author === author && content.permlink === permlink) {
               helperService.setPostReblogged(activeUser, author, permlink);
@@ -94,7 +94,7 @@ export default () => {
       $scope.reblog = () => {
         $confirm($filter('translate')('ARE_YOU_SURE'), null, () => {
           $scope.reblogging = true;
-          steemAuthenticatedService.reblog(author, permlink).then(() => {
+          dpayAuthenticatedService.reblog(author, permlink).then(() => {
             helperService.setPostReblogged(activeUser, author, permlink);
             $scope.reblogged = true;
           }).catch((e) => {
@@ -122,7 +122,7 @@ export default () => {
       $scope.flag = () => {
         $confirm($filter('translate')('ARE_YOU_SURE'), $filter('translate')('FLAGGING_TEXT'), () => {
           $scope.flagging = true;
-          steemAuthenticatedService.vote(author, permlink, -10000).then((resp) => {
+          dpayAuthenticatedService.vote(author, permlink, -10000).then((resp) => {
             $rootScope.$broadcast('CONTENT_VOTED', {
               author: author,
               permlink: permlink,
@@ -142,14 +142,14 @@ export default () => {
         }
       });
 
-      $scope.steemItUrl = makeSteemitUrl($scope.content.parent_permlink, $scope.content.author, $scope.content.permlink);
-      $scope.openSteemit = () => {
-        window.openInBrowser($scope.steemItUrl);
+      $scope.dSiteUrl = makeDSiteUrl($scope.content.parent_permlink, $scope.content.author, $scope.content.permlink);
+      $scope.openDSite = () => {
+        window.openInBrowser($scope.dSiteUrl);
       };
 
-      $scope.busyUrl = makeBusyUrl($scope.content.author, $scope.content.permlink);
-      $scope.openBusy = () => {
-        window.openInBrowser($scope.busyUrl);
+      $scope.dSocialUrl = makeDSocialUrl($scope.content.author, $scope.content.permlink);
+      $scope.openDSocial = () => {
+        window.openInBrowser($scope.dSocialUrl);
       };
 
       $scope.copyAddress = () => {
@@ -183,7 +183,7 @@ export default () => {
       };
 
       $scope.hasHistory = false;
-      eSteemService.commentHistory($scope.content.author, $scope.content.permlink, true).then((resp) => {
+      dExplorerService.commentHistory($scope.content.author, $scope.content.permlink, true).then((resp) => {
         if (resp.data.meta.count > 1) {
           $scope.hasHistory = true;
         }

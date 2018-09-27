@@ -1,8 +1,8 @@
-﻿# [eSteem Surfer][esteem_desktop] – Steem Desktop Client
+﻿# [dExplorer][dexplorer_desktop] – dExplorer Desktop Client for dPay's network
 
-This is the complete source code and the build instructions for the alpha version of the [Steem blockchain](https://steem.io/) desktop client **eSteem Surfer** founded by [Feruz M](https://steemit.com/@good-karma) and Lead Surfer [Talha](https://steemit.com/@talhasch), supported by [eSteem team](https://steemit.com/@esteemapp) and vast Steem community contibutors.
+This is the complete source code and the build instructions for the alpha version of the [dPay blockchain](https://dpays.io/) desktop client **dExplorer**.
 
-![Preview of eSteem Surfer](https://cdn.steemitimages.com/DQmeZgTQCrsBVxk7DzCEUpXujzsx142obVPfXw2jW2kkKcW/shot.png)
+![Preview of dExplorer](https://cdn.dsiteimages.com/DQmeZgTQCrsBVxk7DzCEUpXujzsx142obVPfXw2jW2kkKcW/shot.png)
 
 ## What is already implemented
 
@@ -11,10 +11,10 @@ This is the complete source code and the build instructions for the alpha versio
 * Commenting
 * Voting with any %
 * Reading replies/comments/mentions
-* Drafts `synced with eSteem Mobile`
-* Post Schedules `synced with eSteem Mobile`
-* Bookmarks `synced with eSteem Mobile`
-* Favorites `synced with eSteem Mobile`
+* Drafts `synced with dExplorer Mobile`
+* Post Schedules `synced with dExplorer Mobile`
+* Bookmarks `synced with dExplorer Mobile`
+* Favorites `synced with dExplorer Mobile`
 * Comments/Memo Encryption
 * Night Mode (Dark Theme)
 * Wallet Transfers
@@ -37,8 +37,8 @@ More functions are coming!
 ### Clone
 
 ```
-$ git clone https://github.com/eSteemApp/esteem-surfer
-$ cd esteem-surfer
+$ git clone https://github.com/dpays/dexplorer-desktop
+$ cd dexplorer-desktop
 ```
 
 ### Install dependencies
@@ -73,4 +73,4 @@ $ npm run test
 ```
 
 [//]: # (LINKS)
-[esteem_desktop]: https://esteem.app
+[dexplorer_desktop]: https://dexplorer.io

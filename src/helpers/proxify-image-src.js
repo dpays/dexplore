@@ -3,7 +3,7 @@ export const proxifyImageSrc = (url) => {
     return '';
   }
 
-  const prefix = 'https://steemitimages.com/0x0/';
+  const prefix = 'https://dsiteimages.com/0x0/';
 
   if (url.startsWith(prefix)) return url;
 

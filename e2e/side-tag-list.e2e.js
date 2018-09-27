@@ -62,7 +62,7 @@ describe("side-tag-list", () => {
   });
 
   it('90- Fill filter input', async function () {
-    await this.app.client.keys('esteem');
+    await this.app.client.keys('dexplorer');
   });
 
   it('100- Should start fetching', async function () {
@@ -99,7 +99,7 @@ describe("side-tag-list", () => {
 
   it('130- Fill filter input', async function () {
     await this.app.client.clearElement('#txt-filter-tag');
-    await this.app.client.keys('steem');
+    await this.app.client.keys('dpay');
   });
 
   it('140- Should start fetching', async function () {
@@ -148,7 +148,7 @@ describe("side-tag-list", () => {
 
   it('210- Filter input value should be persisted', async function () {
     const v = await this.app.client.getValue('#txt-filter-tag');
-    expect(v).to.deep.equal('steem');
+    expect(v).to.deep.equal('dpay');
   });
 
   it('220- Should be redirected. Url should contain /posts/', async function () {

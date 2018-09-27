@@ -1,16 +1,16 @@
 {
-  "name": "esteem-surfer",
-  "productName": "eSteem Surfer",
-  "description": "eSteem desktop application reimagined for Windows, Mac, Linux users, start earning cryptocurrency!",
+  "name": "dexplorer-desktop",
+  "productName": "dExplorer Desktop",
+  "description": "dExplorer desktop application reimagined for Windows, Mac, Linux users, start earning cryptocurrency!",
   "version": "1.1.12",
-  "releasePost": "esteem/@good-karma/surfer-1-1-12-update-brings-power-search-a41c9f81b9c9cest",
+  "releasePost": "dpay/@dpay/introducing-dexplorer",
   "private": true,
-  "author": "eSteem <info@esteem.app>",
-  "copyright": "© 2018, eSteem",
-  "homepage": "https://esteem.app",
+  "author": "dPay Labs <labs@dpays.io>",
+  "copyright": "© 2018, dPay Labs",
+  "homepage": "https://dexplorer.io",
   "main": "app/background.js",
   "build": {
-    "appId": "app.esteem.surfer",
+    "appId": "app.dpay.dexplorer",
     "mac": {
       "category": "public.app-category.finance",
       "type": "distribution",
@@ -66,11 +66,11 @@
     ],
     "protocols": [
       {
-        "name": "steem",
+        "name": "dpay",
         "role": "Viewer",
         "schemes": [
-          "steem",
-          "esteem"
+          "dpay",
+          "dexplorer"
         ]
       }
     ],
@@ -80,8 +80,8 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "esteemapp",
-        "repo": "esteem-surfer",
+        "owner": "dexplorerapp",
+        "repo": "dexplorer-desktop",
         "vPrefixedTagName": false,
         "private": false,
         "releaseType": "draft"
@@ -109,6 +109,8 @@
     "crypto-js": "^3.1.9-1",
     "currency-symbol-map": "^4.0.3",
     "diff-match-patch": "^1.0.0",
+    "dpayid": "~0.1.2",
+    "dpayjs": "~0.7.4",
     "electron-updater": "^2.21.10",
     "express": "^4.16.3",
     "fs-jetpack": "^1.0.0",
@@ -118,9 +120,8 @@
     "moment-timezone": "^0.5.14",
     "qrcode": "^1.2.0",
     "remarkable": "^1.7.1",
-    "sc2-sdk": "^1.0.2",
-    "speakingurl": "^14.0.1",
-    "steem": "^0.7.1"
+    "speakingurl": "^14.0.1"
+
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.5",

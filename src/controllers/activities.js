@@ -1,4 +1,4 @@
-export default ($scope, $rootScope, $routeParams, $location, eSteemService, activeUsername) => {
+export default ($scope, $rootScope, $routeParams, $location, dExplorerService, activeUsername) => {
 
   const account = $routeParams.account;
   const activityType = $routeParams.type || '';
@@ -23,22 +23,22 @@ export default ($scope, $rootScope, $routeParams, $location, eSteemService, acti
 
     switch (activityType) {
       case 'votes':
-        prms = eSteemService.getMyVotes(account, since);
+        prms = dExplorerService.getMyVotes(account, since);
         break;
       case 'replies':
-        prms = eSteemService.getMyReplies(account, since);
+        prms = dExplorerService.getMyReplies(account, since);
         break;
       case 'mentions':
-        prms = eSteemService.getMyMentions(account, since);
+        prms = dExplorerService.getMyMentions(account, since);
         break;
       case 'follows':
-        prms = eSteemService.getMyFollows(account, since);
+        prms = dExplorerService.getMyFollows(account, since);
         break;
       case 'reblogs':
-        prms = eSteemService.getMyReblogs(account, since);
+        prms = dExplorerService.getMyReblogs(account, since);
         break;
       default:
-        prms = eSteemService.getActivities(account, since);
+        prms = dExplorerService.getActivities(account, since);
     }
 
     prms.then((resp) => {
@@ -97,7 +97,7 @@ export default ($scope, $rootScope, $routeParams, $location, eSteemService, acti
 
   $scope.markAllRead = () => {
     $scope.marking = true;
-    eSteemService.marActivityAsRead(activeUsername()).then((resp) => {
+    dExplorerService.marActivityAsRead(activeUsername()).then((resp) => {
       $rootScope.unreadActivities = resp.data.unread;
 
       $rootScope.$broadcast('activitiesMarked');

@@ -145,14 +145,14 @@
               <div class="row alternate" ng-if="hasUnclaimedRewards">
                 <div class="col-sm-12">
                   <strong>{{ 'UNCLAIMED_REWARDS'|translate }}: </strong>
-                  <span ng-if="authorData.reward_steem_balance.split(' ')[0]>0">
-                    {{ authorData.reward_steem_balance.split(' ')[0]}} STEEM
+                  <span ng-if="authorData.reward_dpay_balance.split(' ')[0]>0">
+                    {{ authorData.reward_dpay_balance.split(' ')[0]}} BEX
                   </span>
-                  <span ng-if="authorData.reward_sbd_balance.split(' ')[0]>0">
-                    {{ authorData.reward_sbd_balance.split(' ')[0]}} SBD
+                  <span ng-if="authorData.reward_bbd_balance.split(' ')[0]>0">
+                    {{ authorData.reward_bbd_balance.split(' ')[0]}} BBD
                   </span>
-                  <span ng-if="authorData.reward_vesting_steem.split(' ')[0]>0">
-                    {{ authorData.reward_vesting_steem.split(' ')[0]}} SP
+                  <span ng-if="authorData.reward_vesting_dpay.split(' ')[0]>0">
+                    {{ authorData.reward_vesting_dpay.split(' ')[0]}} BP
                   </span>
                   <button class="btn btn-primary" style="margin-left: 20px" ng-if="isMyPage" ng-click="" login-required required-keys="'posting'" on-login-success="claimRewardsClicked()" ng-disabled="claimingRewards"><i class="fa fa-spin fa-spinner fa-circle-o-notch" ng-show="claimingRewards"></i> {{ 'CLAIM_REWARDS' | translate }}</button>
                 </div>
@@ -166,7 +166,7 @@
                   </p>
                 </div>
                 <div class="col-sm-6 col-value">
-                  {{ authorData.balance | money2Number | number }} STEEM
+                  {{ authorData.balance | money2Number | number }} BEX
                 </div>
               </div>
               <div class="row alternate">
@@ -178,13 +178,13 @@
                 </div>
                 <div class="col-sm-6 col-value">
                   <span>
-                    {{ authorData.vesting_shares | steemPower | number }} SP
+                    {{ authorData.vesting_shares | dpayPower | number }} BP
                   </span>
                   <span ng-if="authorData.delegated_vesting_shares != '0.000000 VESTS'">
-                   <a ng-click="delegatedVestingClicked()" class="btn-delegation">-{{ authorData.delegated_vesting_shares | steemPower | number }} SP</a>
+                   <a ng-click="delegatedVestingClicked()" class="btn-delegation">-{{ authorData.delegated_vesting_shares | dpayPower | number }} BP</a>
                   </span>
                   <span ng-if="authorData.received_vesting_shares != '0.000000 VESTS'">
-                    +{{ authorData.received_vesting_shares | steemPower | number }} SP
+                    +{{ authorData.received_vesting_shares | dpayPower | number }} BP
                   </span>
                 </div>
               </div>
@@ -196,7 +196,7 @@
                   </p>
                 </div>
                 <div class="col-sm-6 col-value">
-                  {{ authorData.sbd_balance | money2Number | number }} SBD
+                  {{ authorData.bbd_balance | money2Number | number }} BBD
                 </div>
               </div>
               <div class="row alternate">
@@ -207,8 +207,8 @@
                   </p>
                 </div>
                 <div class="col-sm-6 col-value">
-                  <span>{{ authorData.savings_balance | money2Number  }} STEEM</span>
-                  <span>{{ authorData.savings_sbd_balance | money2Number  }} SBD</span>
+                  <span>{{ authorData.savings_balance | money2Number  }} BEX</span>
+                  <span>{{ authorData.savings_bbd_balance | money2Number  }} BBD</span>
                 </div>
               </div>
               <div class="row">
@@ -219,7 +219,7 @@
                   </p>
                 </div>
                 <div class="col-sm-6 col-value">{{ $root.currency | currencySymbol }}
-                  {{ authorData.vesting_shares | steemDollar:authorData.balance:authorData.sbd_balance | number }}
+                  {{ authorData.vesting_shares | dpayDollar:authorData.balance:authorData.bbd_balance | number }}
                 </div>
               </div>
               <p class="next-power-down" ng-if="authorData.next_vesting_withdrawal !== '1969-12-31T23:59:59'">
@@ -234,11 +234,11 @@
                   <td>{{ tr[1].op[0] }}</td>
                   <td class="trans-desc">
                     <div ng-if="tr[1].op[0]=='comment_reward'">
-                      {{ tr[1].op[1].sbd_payout }} | {{ tr[1].op[1].vesting_payout }}
+                      {{ tr[1].op[1].bbd_payout }} | {{ tr[1].op[1].vesting_payout }}
                       <p>@{{ tr[1].op[1].author }} / {{ tr[1].op[1].permlink }}</p>
                     </div>
                     <div ng-if="tr[1].op[0]=='author_reward'">
-                      {{ tr[1].op[1].sbd_payout }} | {{ tr[1].op[1].steem_payout }} | {{ tr[1].op[1].vesting_payout }}
+                      {{ tr[1].op[1].bbd_payout }} | {{ tr[1].op[1].dpay_payout }} | {{ tr[1].op[1].vesting_payout }}
                       <p>@{{ tr[1].op[1].author}}/{{ tr[1].op[1].permlink}}</p>
                     </div>
                     <div ng-if="tr[1].op[0]=='curation_reward'">
@@ -264,7 +264,7 @@
                       {{ tr[1].op[1].current_pays }} = {{ tr[1].op[1].open_pays }}
                     </div>
                     <div ng-if="tr[1].op[0]=='claim_reward_balance'">
-                      {{ tr[1].op[1].reward_steem }} | {{ tr[1].op[1].reward_sbd }} | {{ tr[1].op[1].reward_vests }}
+                      {{ tr[1].op[1].reward_dpay }} | {{ tr[1].op[1].reward_bbd }} | {{ tr[1].op[1].reward_vests }}
                     </div>
                     <div ng-if="tr[1].op[0]=='comment_benefactor_reward'">
                       {{ tr[1].op[1].benefactor | uppercase }} | {{ tr[1].op[1].permlink }}

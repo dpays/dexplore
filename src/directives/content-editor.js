@@ -128,7 +128,7 @@ export default () => {
       </div>
       <input class="file-input" id="file-input" type="file" accept="image/*" multiple>
     </div>`,
-    controller: ($scope, $rootScope, $timeout, eSteemService, activeUsername) => {
+    controller: ($scope, $rootScope, $timeout, dExplorerService, activeUsername) => {
 
       $scope.insertImage = (name = '', url = 'url') => {
         insertText($scope.txtEl, `![${name}`, `](${url})`);
@@ -147,7 +147,7 @@ export default () => {
         for (let f of files) {
           $scope.uploadingImage = f.name;
 
-          await eSteemService.uploadImage(f, (e) => {
+          await dExplorerService.uploadImage(f, (e) => {
             if (e.lengthComputable) {
               let perc = parseInt((e.loaded / e.total) * 100);
               if (perc > 100) {
@@ -168,7 +168,7 @@ export default () => {
         $scope.$applyAsync();
 
         for (let u of uploadedFiles) {
-          eSteemService.addMyImage(activeUsername(), u).then((resp) => {
+          dExplorerService.addMyImage(activeUsername(), u).then((resp) => {
             // console.log(resp)
           }).catch((e) => {
             // console.log(e)

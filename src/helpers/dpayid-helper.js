@@ -39,8 +39,8 @@ export const scLogin = (successCb, windowCloseCb) => {
 
   const win = new remote.BrowserWindow(windowSettings);
 
-  // Clear session in order to steemconnect ask username and password for each request.
-  cleanWindowStorage(win, 'https://v2.steemconnect.com');
+  // Clear session in order to dPayID ask username and password for each request.
+  cleanWindowStorage(win, 'https://go.dpayid.io');
 
   win.loadURL(`${helperUrl}/login`);
 
@@ -205,7 +205,7 @@ export const scTransferToVesting = (from, to, amount, successCb, windowCloseCb) 
   });
 };
 
-export const scEsrowTransfer = (from, to, agent, escrowId, sbdAmount, steemAmount, fee, ratificationDeadline, escrowExpiration, jsonMeta, successCb, windowCloseCb) => {
+export const scEsrowTransfer = (from, to, agent, escrowId, sbdAmount, dpayAmount, fee, ratificationDeadline, escrowExpiration, jsonMeta, successCb, windowCloseCb) => {
 
   const win = new remote.BrowserWindow(windowSettings);
   win.loadURL(`${helperUrl}/escrow-transfer?data=${encodeURIComponent(JSON.stringify({
@@ -214,7 +214,7 @@ export const scEsrowTransfer = (from, to, agent, escrowId, sbdAmount, steemAmoun
     'agent': agent,
     'escrowId': escrowId,
     'sbdAmount': sbdAmount,
-    'steemAmount': steemAmount,
+    'dpayAmount': dpayAmount,
     'fee': fee,
     'ratificationDeadline': ratificationDeadline.toISOString().split('.')[0],
     'escrowExpiration': escrowExpiration.toISOString().split('.')[0],

@@ -1,4 +1,4 @@
-export default ($scope, $rootScope, $routeParams, $location, steemService, activeUsername, constants) => {
+export default ($scope, $rootScope, $routeParams, $location, dpayService, activeUsername, constants) => {
 
   let username = $routeParams.username;
 
@@ -24,10 +24,10 @@ export default ($scope, $rootScope, $routeParams, $location, steemService, activ
   const loadPosts = (startAuthor = null, startPermalink = null) => {
 
     $scope.loadingPosts = true;
-    steemService.getDiscussionsBy('Feed', username, startAuthor, startPermalink, constants.postListSize).then((resp) => {
+    dpayService.getDiscussionsBy('Feed', username, startAuthor, startPermalink, constants.postListSize).then((resp) => {
 
       // if server returned less than 2 posts, it means end of pagination
-      // comparison value is 2 because steem api returns at least 1 post on pagination
+      // comparison value is 2 because dPay api returns at least 1 post on pagination
       if (resp.length < 2) {
         hasMore = false;
         return false;

@@ -1,9 +1,9 @@
 import {amountFormatCheck, formatStrAmount} from './helper';
 import badActors from '../data/bad-actors.json';
-import steem from 'steem';
+import dpay from 'dpayjs';
 
 
-export default ($scope, $rootScope, $routeParams, $timeout, $location, $filter, autoCancelTimeout, steemService, steemAuthenticatedService, userService, activeUsername, cryptoService) => {
+export default ($scope, $rootScope, $routeParams, $timeout, $location, $filter, autoCancelTimeout, dpayService, dpayAuthenticatedService, userService, activeUsername, cryptoService) => {
   const mode = $routeParams.mode ? $routeParams.mode : 'normal';
   $scope.mode = mode;
 
@@ -24,7 +24,7 @@ export default ($scope, $rootScope, $routeParams, $timeout, $location, $filter, 
 
   $scope.to = '';
   $scope.amount = '0.001';
-  $scope.asset = 'STEEM';
+  $scope.asset = 'BEX';
   $scope.memo = '';
   $scope.balance = '0';
   $scope.toData = null;
@@ -64,7 +64,7 @@ export default ($scope, $rootScope, $routeParams, $timeout, $location, $filter, 
       $scope.toData = null;
       $scope.fetchingTo = true;
 
-      steemService.getAccounts([$scope.to]).then((resp) => {
+      dpayService.getAccounts([$scope.to]).then((resp) => {
         if (resp.length === 0) {
           $scope.toErr = $filter('translate')('NONEXIST_USER');
           return;
@@ -116,7 +116,7 @@ export default ($scope, $rootScope, $routeParams, $timeout, $location, $filter, 
   const loadFromAccount = () => {
     $scope.fetchingFromAccount = true;
 
-    return steemService.getAccounts([$scope.from]).then((resp) => {
+    return dpayService.getAccounts([$scope.from]).then((resp) => {
       return resp[0];
     }).catch((e) => {
       $rootScope.showError(e);
@@ -131,11 +131,11 @@ export default ($scope, $rootScope, $routeParams, $timeout, $location, $filter, 
   const getBalance = (asset) => {
 
     if (mode === 'from_savings') {
-      const k = (asset === 'STEEM' ? 'savings_balance' : 'savings_sbd_balance');
+      const k = (asset === 'BEX' ? 'savings_balance' : 'savings_bbd_balance');
       return $scope.account[k].split(' ')[0];
     }
 
-    const k = (asset === 'STEEM' ? 'balance' : 'sbd_balance');
+    const k = (asset === 'BEX' ? 'balance' : 'bbd_balance');
     return $scope.account[k].split(' ')[0];
   };
 
@@ -164,7 +164,7 @@ export default ($scope, $rootScope, $routeParams, $timeout, $location, $filter, 
         const senderPrivateKey = cryptoService.decryptKey($rootScope.user.keys['memo']);
         const receiverPublicKey = $scope.toData.memo_key;
 
-        memo = steem.memo.encode(senderPrivateKey, receiverPublicKey, memo);
+        memo = dpay.memo.encode(senderPrivateKey, receiverPublicKey, memo);
       }
 
       const fromAccount = getAccount(from);
@@ -174,14 +174,14 @@ export default ($scope, $rootScope, $routeParams, $timeout, $location, $filter, 
       let prms = '';
       switch (mode) {
         case 'normal':
-          prms = steemAuthenticatedService.transfer(wif, from, to, amount, memo);
+          prms = dpayAuthenticatedService.transfer(wif, from, to, amount, memo);
           break;
         case 'to_savings':
-          prms = steemAuthenticatedService.transferToSavings(wif, from, to, amount, memo);
+          prms = dpayAuthenticatedService.transferToSavings(wif, from, to, amount, memo);
           break;
         case 'from_savings':
           const requestId = (new Date().getTime()) >>> 0;
-          prms = steemAuthenticatedService.transferFromSavings(wif, from, requestId, to, amount, memo);
+          prms = dpayAuthenticatedService.transferFromSavings(wif, from, requestId, to, amount, memo);
           break;
       }
 

@@ -11,7 +11,7 @@ const make_diff = (str1, str2) => {
 };
 
 
-export default ($scope, $rootScope, $uibModalInstance, $filter, $sce, $timeout, eSteemService, content) => {
+export default ($scope, $rootScope, $uibModalInstance, $filter, $sce, $timeout, dExplorerService, content) => {
 
   $scope.list = [];
   $scope.showDiff = {val: false};
@@ -57,7 +57,7 @@ export default ($scope, $rootScope, $uibModalInstance, $filter, $sce, $timeout, 
   };
 
   $scope.loading = true;
-  eSteemService.commentHistory(content.author, content.permlink).then((resp) => {
+  dExplorerService.commentHistory(content.author, content.permlink).then((resp) => {
     buildList(resp.data.list);
     $scope.select(1);
     $scope.loading = false;

@@ -56,7 +56,7 @@ export default () => {
         <comment-list comments="comment.comments"></comment-list>
       </div>
     `,
-    controller: ($scope, $rootScope, $filter, $timeout, $location, $window, $confirm, steemAuthenticatedService, activeUsername) => {
+    controller: ($scope, $rootScope, $filter, $timeout, $location, $window, $confirm, dpayAuthenticatedService, activeUsername) => {
 
       const activeUser = activeUsername();
 
@@ -96,7 +96,7 @@ export default () => {
         if ($window.confirm($filter('translate')('ARE_YOU_SURE'))) {
           $scope.deleting = true;
 
-          steemAuthenticatedService.deleteComment($scope.comment.author, $scope.comment.permlink).then((resp) => {
+          dpayAuthenticatedService.deleteComment($scope.comment.author, $scope.comment.permlink).then((resp) => {
             $scope.deleted = true;
 
             $timeout(() => {
@@ -157,7 +157,7 @@ export default () => {
           const permlink = $scope.comment.permlink;
 
           $scope.flagging = true;
-          steemAuthenticatedService.vote(author, permlink, -10000).then((resp) => {
+          dpayAuthenticatedService.vote(author, permlink, -10000).then((resp) => {
             $rootScope.$broadcast('CONTENT_VOTED', {
               author: author,
               permlink: permlink,

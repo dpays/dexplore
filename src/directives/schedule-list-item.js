@@ -44,7 +44,7 @@ export default () => {
         </div>
       </div>
     `,
-    controller: ($scope, $rootScope, $location, $filter, $window, eSteemService, activeUsername) => {
+    controller: ($scope, $rootScope, $location, $filter, $window, dExplorerService, activeUsername) => {
 
       $scope.deleting = false;
 
@@ -61,7 +61,7 @@ export default () => {
       $scope.deleteClicked = (schedule) => {
         if ($window.confirm($filter('translate')('ARE_YOU_SURE'))) {
           $scope.deleting = true;
-          eSteemService.removeSchedule(schedule._id, activeUsername()).then((resp) => {
+          dExplorerService.removeSchedule(schedule._id, activeUsername()).then((resp) => {
             $rootScope.$broadcast('SCHEDULE_DELETED');
             $rootScope.showSuccess($filter('translate')('DELETED_SCHEDULE'));
           }).catch((e) => {
@@ -76,7 +76,7 @@ export default () => {
       $scope.moving = false;
       $scope.moveClicked = (schedule) => {
         $scope.moving = true;
-        eSteemService.moveSchedule(schedule._id, activeUsername()).then((resp) => {
+        dExplorerService.moveSchedule(schedule._id, activeUsername()).then((resp) => {
           $rootScope.$broadcast('SCHEDULE_MOVED');
           $rootScope.showSuccess($filter('translate')('MOVED_SCHEDULE'));
         }).catch((e) => {

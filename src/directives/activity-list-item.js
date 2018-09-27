@@ -72,7 +72,7 @@ export default () => {
         
       </div>
     </div>`,
-    controller: ($scope, $rootScope, $location, steemService, eSteemService, activeUsername) => {
+    controller: ($scope, $rootScope, $location, dpayService, dExplorerService, activeUsername) => {
 
       moment.locale($rootScope.language);
 
@@ -82,7 +82,7 @@ export default () => {
       };
 
       $scope.goContent = (account, permlink) => {
-        steemService.getContent(account, permlink).then(resp => {
+        dpayService.getContent(account, permlink).then(resp => {
           if (resp.id) {
             $rootScope.selectedPost = null;
             const u = `/post/${resp.category}/${resp.author}/${resp.permlink}`;
@@ -94,7 +94,7 @@ export default () => {
       $scope.markAsRead = () => {
         $scope.activity.read = 1;
 
-        eSteemService.marActivityAsRead(activeUsername(), $scope.activity.id).then((resp) => {
+        dExplorerService.marActivityAsRead(activeUsername(), $scope.activity.id).then((resp) => {
           $rootScope.unreadActivities = resp.data.unread;
         }).catch((e) => {
           $scope.activity.read = 0;

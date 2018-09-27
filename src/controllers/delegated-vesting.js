@@ -1,4 +1,4 @@
-export default ($scope, $rootScope, $filter, $uibModalInstance, $location, $confirm, steemService, steemAuthenticatedService, activeUsername, account) => {
+export default ($scope, $rootScope, $filter, $uibModalInstance, $location, $confirm, dpayService, dpayAuthenticatedService, activeUsername, account) => {
 
   $scope.list = [];
   $scope.canUndelegate = activeUsername() === account;
@@ -7,7 +7,7 @@ export default ($scope, $rootScope, $filter, $uibModalInstance, $location, $conf
   const main = () => {
     $scope.list = [];
     $scope.loading = true;
-    steemService.getVestingDelegations(account).then((resp) => {
+    dpayService.getVestingDelegations(account).then((resp) => {
 
       $scope.list = resp;
     }).catch((e) => {
@@ -23,7 +23,7 @@ export default ($scope, $rootScope, $filter, $uibModalInstance, $location, $conf
     $confirm($filter('translate')('ARE_YOU_SURE'), '', () => {
       $scope.undelegating = true;
 
-      steemAuthenticatedService.unDelegateVestingShares(delegatee).then((resp) => {
+      dpayAuthenticatedService.unDelegateVestingShares(delegatee).then((resp) => {
         main();
       }).catch((e) => {
         $rootScope.showError(e);

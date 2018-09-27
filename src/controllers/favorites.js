@@ -1,4 +1,4 @@
-export default ($scope, $rootScope, $location, $uibModalInstance, autoCancelTimeout, eSteemService, steemService, activeUsername) => {
+export default ($scope, $rootScope, $location, $uibModalInstance, autoCancelTimeout, dExplorerService, dpayService, activeUsername) => {
   $scope.term = '';
 
   const loadData = function () {
@@ -27,7 +27,7 @@ export default ($scope, $rootScope, $location, $uibModalInstance, autoCancelTime
 
   $scope.removeClicked = (b) => {
     $scope.processing = true;
-    eSteemService.removeFavorite(activeUsername(), b._id).then((r) => {
+    dExplorerService.removeFavorite(activeUsername(), b._id).then((r) => {
       // Create favorites list ignoring deleted item
       $rootScope.favorites = $rootScope.favorites.filter(i => i._id !== b._id);
       loadData();

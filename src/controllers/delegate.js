@@ -1,6 +1,6 @@
 import badActors from '../data/bad-actors.json';
 
-export default ($scope, $rootScope, $routeParams, $timeout, $location, $filter, autoCancelTimeout, steemService, steemAuthenticatedService, userService) => {
+export default ($scope, $rootScope, $routeParams, $timeout, $location, $filter, autoCancelTimeout, dpayService, dpayAuthenticatedService, userService) => {
 
   const curAccount = $routeParams.account;
   const accountList = userService.getAll();
@@ -83,7 +83,7 @@ export default ($scope, $rootScope, $routeParams, $timeout, $location, $filter, 
       $scope.toData = null;
       $scope.fetchingTo = true;
 
-      steemService.getAccounts([$scope.to]).then((resp) => {
+      dpayService.getAccounts([$scope.to]).then((resp) => {
         if (resp.length === 0) {
           $scope.toErr = $filter('translate')('NONEXIST_USER');
           return;
@@ -111,7 +111,7 @@ export default ($scope, $rootScope, $routeParams, $timeout, $location, $filter, 
   const loadFromAccount = () => {
     $scope.fetchingFromAccount = true;
 
-    return steemService.getAccounts([$scope.from]).then((resp) => {
+    return dpayService.getAccounts([$scope.from]).then((resp) => {
       const account = resp[0];
 
       const vestingShares = availableVestingShares(account);
@@ -149,7 +149,7 @@ export default ($scope, $rootScope, $routeParams, $timeout, $location, $filter, 
 
       $scope.processing = true;
 
-      steemAuthenticatedService.delegateVestingShares(wif, from, to, vestingShares).then((resp) => {
+      dpayAuthenticatedService.delegateVestingShares(wif, from, to, vestingShares).then((resp) => {
         $rootScope.showSuccess($filter('translate')('TX_BROADCASTED'));
         $location.path(`/account/${from}/wallet`);
       }).catch((e) => {
@@ -169,7 +169,7 @@ export default ($scope, $rootScope, $routeParams, $timeout, $location, $filter, 
   };
 
   const vests2sp = (vests) => {
-    return $filter('steemPower')(vests.toString());
+    return $filter('dpayPower')(vests.toString());
   };
 
   loadFromAccount().then(() => {

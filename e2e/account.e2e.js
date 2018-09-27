@@ -1,6 +1,6 @@
 import chai from "chai";
 import testUtils from "./utils";
-import steem from 'steem';
+import dpay from 'dpayjs';
 
 chai.use(require('chai-string'));
 
@@ -33,7 +33,7 @@ describe("account", () => {
     const unfollow = function () {
       return new Promise(function (resolve, reject) {
         const json = ['follow', {follower: username, following: following, what: []}];
-        steem.broadcast.customJson(wif, [], [username], 'follow', JSON.stringify(json), (err, response) => {
+        dpay.broadcast.customJson(wif, [], [username], 'follow', JSON.stringify(json), (err, response) => {
           if (err) {
             reject(err);
           }

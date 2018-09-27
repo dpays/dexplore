@@ -1,6 +1,6 @@
 import {amountFormatCheck, amountPrecisionCheck, isUrl} from './helper';
 
-export default ($scope, $rootScope, $uibModalInstance, $filter, accountData, steemAuthenticatedService, afterUpdate) => {
+export default ($scope, $rootScope, $uibModalInstance, $filter, accountData, dpayAuthenticatedService, afterUpdate) => {
 
   let curJsonMeta = {};
 
@@ -20,7 +20,7 @@ export default ($scope, $rootScope, $uibModalInstance, $filter, accountData, ste
     const newJsonMeta = Object.assign({}, curJsonMeta, $scope.formData);
 
     $scope.processing = true;
-    steemAuthenticatedService.profileUpdate(accountData.name, accountData.memo_key, newJsonMeta).then((resp) => {
+    dpayAuthenticatedService.profileUpdate(accountData.name, accountData.memo_key, newJsonMeta).then((resp) => {
       afterUpdate();
       $rootScope.showSuccess($filter('__')('ACCOUNT_PROFILE_UPDATED'));
       $scope.close();
@@ -67,35 +67,35 @@ export default ($scope, $rootScope, $uibModalInstance, $filter, accountData, ste
     }
   };
 
-  $scope.feeSteemChanged = () => {
-    $scope.escrowSteemErr = null;
+  $scope.feeDPayChanged = () => {
+    $scope.escrowDPayErr = null;
 
-    if (!$scope.formData.escrow.fees.STEEM) {
+    if (!$scope.formData.escrow.fees.BEX) {
       return;
     }
 
-    if (!amountFormatCheck($scope.formData.escrow.fees.STEEM)) {
-      $scope.escrowSteemErr = $filter('__')('WRONG_AMOUNT_VALUE');
+    if (!amountFormatCheck($scope.formData.escrow.fees.BEX)) {
+      $scope.escrowDPayErr = $filter('__')('WRONG_AMOUNT_VALUE');
     }
 
-    if (!amountPrecisionCheck($scope.formData.escrow.fees.STEEM)) {
-      $scope.escrowSteemErr = $filter('__')('AMOUNT_PRECISION_ERR');
+    if (!amountPrecisionCheck($scope.formData.escrow.fees.BEX)) {
+      $scope.escrowDPayErr = $filter('__')('AMOUNT_PRECISION_ERR');
     }
   };
 
-  $scope.feeSbdChanged = () => {
-    $scope.escrowSbdErr = null;
+  $scope.feeBbdChanged = () => {
+    $scope.escrowBbdErr = null;
 
-    if (!$scope.formData.escrow.fees.SBD) {
+    if (!$scope.formData.escrow.fees.BBD) {
       return;
     }
 
-    if (!amountFormatCheck($scope.formData.escrow.fees.SBD)) {
-      $scope.escrowSbdErr = $filter('__')('WRONG_AMOUNT_VALUE');
+    if (!amountFormatCheck($scope.formData.escrow.fees.BBD)) {
+      $scope.escrowBbdErr = $filter('__')('WRONG_AMOUNT_VALUE');
     }
 
-    if (!amountPrecisionCheck($scope.formData.escrow.fees.SBD)) {
-      $scope.escrowSbdErr = $filter('__')('AMOUNT_PRECISION_ERR');
+    if (!amountPrecisionCheck($scope.formData.escrow.fees.BBD)) {
+      $scope.escrowBbdErr = $filter('__')('AMOUNT_PRECISION_ERR');
     }
   };
 

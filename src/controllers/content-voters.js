@@ -1,6 +1,6 @@
 import {authorReputation} from '../filters/author-reputation';
 
-export default ($scope, $rootScope, $uibModalInstance, $location, content, steemService) => {
+export default ($scope, $rootScope, $uibModalInstance, $location, content, dpayService) => {
 
   const totalPayout =
     parseFloat(content.pending_payout_value.split(' ')[0]) +
@@ -47,7 +47,7 @@ export default ($scope, $rootScope, $uibModalInstance, $location, content, steem
 
   $scope.loading = true;
 
-  steemService.getActiveVotesAsync(content.author, content.permlink).then((resp) => {
+  dpayService.getActiveVotesAsync(content.author, content.permlink).then((resp) => {
     for (let a of resp) {
       const rew = ((a.rshares * ratio) * rate);
       const rep = authorReputation(a.reputation);

@@ -10,8 +10,8 @@
     <p class="account-list-title">{{ 'LOGIN_AS' | __ }}</p>
     <div class="account-list-item" ng-repeat="account in accounts | orderBy:'-lastActive'" ng-class="{'active': activeUsername===account.username}">
       <div class="login-type-image">
-      <img  ng-if="account.type==='s'" src="img/steem.svg" title="Steem">
-      <img ng-if="account.type==='sc'" src="img/steem-connect-logo.svg" title="Steem Connect">
+      <img  ng-if="account.type==='s'" src="img/dpay.svg" title="dPay">
+      <img ng-if="account.type==='sc'" src="img/dpayid.svg" title="dPayID">
       </div>
       <div class="profile-image" author-bg-img-style author="{{ account.username }}"></div>
       <span class="username">@{{ account.username }}</span>
@@ -44,12 +44,11 @@
     <div class="form-group">
       <button type="submit" class="btn btn-primary btn-block" id="btn-login" ng-disabled="!isLoginButtonVisible() || processing" ng-click="loginClicked()"><i class="fa fa-spin fa-spinner fa-circle-o-notch" ng-show="processing"></i> {{ 'LOGIN' | translate }}</button>
     </div>
-    <p class="text-center">{{ 'DONT_HAVE' | translate }} <a href="https://signup.steemit.com/?ref=esteemapp" target="_external">{{ 'SIGN_UP_NOW' | translate }}</a></p>
+    <p class="text-center">{{ 'DONT_HAVE' | translate }} <a href="https://signup.dsite.io/?ref=dexplorer" target="_external">{{ 'SIGN_UP_NOW' | translate }}</a></p>
     <hr class="hr-or" data-content="{{ 'OR' | translate }}">
-    <div class="steem-connect" ng-click="loginWith()">
+    <div class="dpayid" ng-click="loginWith()">
       <div class="via">Login with</div>
-      <div class="logo"><img src="img/steem-connect.svg"></div>
+      <div class="logo"><img src="img/dpayid.svg"></div>
     </div>
   </form>
 </div>
-

@@ -1,4 +1,4 @@
-export default ($scope, $rootScope, $location, $routeParams, steemService, eSteemService) => {
+export default ($scope, $rootScope, $location, $routeParams, dpayService, dExplorerService) => {
   
   const term = decodeURIComponent($routeParams.obj);
   const searchStr = JSON.parse(term.indexOf('?')>-1?term.split('?')[0]:term).str;
@@ -52,7 +52,7 @@ export default ($scope, $rootScope, $location, $routeParams, steemService, eStee
 
   const loadPosts = (cb = null) => {
     $scope.loadingPosts = true;
-    eSteemService.search(searchStr, $scope.sortBy, $scope.scrollId).then((resp) => {
+    dExplorerService.search(searchStr, $scope.sortBy, $scope.scrollId).then((resp) => {
       $scope.scrollId = resp.data.scroll_id;
 
       $scope.hits = resp.data.hits;
@@ -78,7 +78,7 @@ export default ($scope, $rootScope, $location, $routeParams, steemService, eStee
   $scope.accounts = [];
 
   const loadAccounts = () => {
-    steemService.lookupAccounts(searchStr, 10).then((resp) => {
+    dpayService.lookupAccounts(searchStr, 10).then((resp) => {
       $scope.accounts = resp;
     })
   };

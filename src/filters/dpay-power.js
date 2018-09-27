@@ -4,7 +4,7 @@ export default ($rootScope) => {
       return '';
     }
 
-    return (Number(input.split(" ")[0]) / 1e6 * $rootScope.steemPerMVests).toFixed(3);
+    return (Number(input.split(" ")[0]) / 1e6 * $rootScope.dpayPerMVests).toFixed(3);
   };
 
   fn.$stateful = true;

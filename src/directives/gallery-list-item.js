@@ -26,7 +26,7 @@ export default () => {
        <img src="{{ image.url }}">
     </div>
     `,
-    controller: ($scope, $rootScope, $location, $filter, $window, eSteemService, activeUsername) => {
+    controller: ($scope, $rootScope, $location, $filter, $window, dExplorerService, activeUsername) => {
 
       $scope.copy = (image) => {
         const i = document.createElement('input');
@@ -41,7 +41,7 @@ export default () => {
       $scope.deleteClicked = (image) => {
         if ($window.confirm($filter('translate')('ARE_YOU_SURE'))) {
           $scope.deleting = true;
-          eSteemService.removeImage(image._id, activeUsername()).then((resp) => {
+          dExplorerService.removeImage(image._id, activeUsername()).then((resp) => {
             $scope.removeDirective();
           }).catch((e) => {
             $rootScope.showError('Could not deleted image!');

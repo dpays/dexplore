@@ -13,7 +13,7 @@ const prepareFollowerData = (data) => {
 };
 
 
-export default ($scope, $rootScope, $uibModalInstance, accountData, steemService) => {
+export default ($scope, $rootScope, $uibModalInstance, accountData, dpayService) => {
 
   const username = accountData.name;
   const fetchSize = 80;
@@ -28,10 +28,10 @@ export default ($scope, $rootScope, $uibModalInstance, accountData, steemService
     $scope.searching = false;
     $scope.searched = false;
 
-    steemService.getFollowers(username, null, 'blog', fetchSize).then((resp) => {
+    dpayService.getFollowers(username, null, 'blog', fetchSize).then((resp) => {
 
       const accountNames = resp.map(e => e.follower);
-      return steemService.getAccounts(accountNames).then((resp) => resp);
+      return dpayService.getAccounts(accountNames).then((resp) => resp);
     }).catch((e) => {
       $rootScope.showError(e);
     }).then((accounts) => {
@@ -63,11 +63,11 @@ export default ($scope, $rootScope, $uibModalInstance, accountData, steemService
     $scope.hasMore = false;
     $scope.searching = true;
 
-    steemService.getFollowers(username, searchUser, 'blog', 1).then((resp) => {
+    dpayService.getFollowers(username, searchUser, 'blog', 1).then((resp) => {
       $scope.searched = true;
 
       if (resp[0].follower === searchUser) {
-        return steemService.getAccounts([searchUser]).then((resp) => resp);
+        return dpayService.getAccounts([searchUser]).then((resp) => resp);
       }
     }).catch((e) => {
       $rootScope.showError(e);
@@ -88,10 +88,10 @@ export default ($scope, $rootScope, $uibModalInstance, accountData, steemService
   $scope.loadMore = () => {
     $scope.fetching = true;
     let lastItem = [...$scope.followerList].pop();
-    steemService.getFollowers(username, lastItem.name, 'blog', fetchSize).then((resp) => {
+    dpayService.getFollowers(username, lastItem.name, 'blog', fetchSize).then((resp) => {
 
       const accountNames = resp.map(e => e.follower);
-      return steemService.getAccounts(accountNames).then((resp) => resp);
+      return dpayService.getAccounts(accountNames).then((resp) => resp);
     }).catch((e) => {
       $rootScope.showError(e);
     }).then((accounts) => {

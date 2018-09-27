@@ -1,7 +1,7 @@
-import steem from 'steem';
+import dpay from 'dpayjs';
 
 
-export default ($scope, $rootScope, $timeout, $uibModalInstance, settingsService, eSteemService, steemApi, constants) => {
+export default ($scope, $rootScope, $timeout, $uibModalInstance, settingsService, dExplorerService, dpayApi, constants) => {
 
   // Form selection datas
   $scope.languages = constants.languages;
@@ -61,7 +61,7 @@ export default ($scope, $rootScope, $timeout, $uibModalInstance, settingsService
     }
     $scope.formState = 2;
 
-    eSteemService.getCurrencyRate(newVal).then((resp) => {
+    dExplorerService.getCurrencyRate(newVal).then((resp) => {
       settingsService.set('currency', newVal);
       $rootScope.readSettings();
       $rootScope.currencyRate = resp.data;
@@ -123,9 +123,9 @@ export default ($scope, $rootScope, $timeout, $uibModalInstance, settingsService
       serverAddr = $scope.customServerAddr;
     }
 
-    steemApi.setServer(serverAddr);
+    dpayApi.setServer(serverAddr);
 
-    steem.api.getDynamicGlobalProperties(function (err, resp) {
+    dpay.api.getDynamicGlobalProperties(function (err, resp) {
 
       if (err) {
         // Server Failed

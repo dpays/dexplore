@@ -1,4 +1,4 @@
-import steem from 'steem';
+import dpay from 'dpayjs';
 import sc2 from 'sc2-sdk';
 
 import {
@@ -13,16 +13,16 @@ import {
   scWitnessProxy,
   scDelegateVestingShares,
   scUndelegateVestingShares
-} from '../helpers/steem-connect-helper';
+} from '../helpers/dpayid-helper';
 
-export default ($rootScope, steemApi, $q, cryptoService) => {
+export default ($rootScope, dpayApi, $q, cryptoService) => {
 
   const follow = (wif, follower, following) => {
     wif = cryptoService.decryptKey(wif);
 
     const json = ['follow', {follower: follower, following: following, what: ['blog']}];
     let defer = $q.defer();
-    steem.broadcast.customJson(wif, [], [follower], 'follow', JSON.stringify(json), (err, response) => {
+    dpay.broadcast.customJson(wif, [], [follower], 'follow', JSON.stringify(json), (err, response) => {
       if (err) {
         defer.reject(err);
       } else {
@@ -58,7 +58,7 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
 
     const json = ['follow', {follower: unfollower, following: unfollowing, what: []}];
     let defer = $q.defer();
-    steem.broadcast.customJson(wif, [], [unfollower], 'follow', JSON.stringify(json), (err, response) => {
+    dpay.broadcast.customJson(wif, [], [unfollower], 'follow', JSON.stringify(json), (err, response) => {
       if (err) {
         defer.reject(err);
       } else {
@@ -94,7 +94,7 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
 
     const json = ['follow', {follower: follower, following: following, what: ['ignore']}];
     let defer = $q.defer();
-    steem.broadcast.customJson(wif, [], [follower], 'follow', JSON.stringify(json), (err, response) => {
+    dpay.broadcast.customJson(wif, [], [follower], 'follow', JSON.stringify(json), (err, response) => {
       if (err) {
         defer.reject(err);
       } else {
@@ -130,7 +130,7 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
 
     const json = ['reblog', {account: account, author: author, permlink: permlink}];
     let defer = $q.defer();
-    steem.broadcast.customJson(wif, [], [account], 'follow', JSON.stringify(json), (err, response) => {
+    dpay.broadcast.customJson(wif, [], [account], 'follow', JSON.stringify(json), (err, response) => {
       if (err) {
         defer.reject(err);
       } else {
@@ -165,7 +165,7 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
     wif = cryptoService.decryptKey(wif);
 
     let defer = $q.defer();
-    steem.broadcast.vote(wif, voter, author, permlink, weight, function (err, response) {
+    dpay.broadcast.vote(wif, voter, author, permlink, weight, function (err, response) {
       if (err) {
         defer.reject(err);
       } else {
@@ -230,7 +230,7 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
 
     console.log(opArray);
 
-    steem.broadcast.send({operations: opArray, extensions: []}, {posting: wif}, function (err, response) {
+    dpay.broadcast.send({operations: opArray, extensions: []}, {posting: wif}, function (err, response) {
       if (err) {
         defer.reject(err);
       } else {
@@ -297,7 +297,7 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
 
     let defer = $q.defer();
 
-    steem.broadcast.deleteComment(wif, author, permlink, function (err, response) {
+    dpay.broadcast.deleteComment(wif, author, permlink, function (err, response) {
       if (err) {
         defer.reject(err);
       } else {
@@ -338,7 +338,7 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
 
     let defer = $q.defer();
 
-    steem.broadcast.accountUpdate(wif, account, owner, active, posting, memoKey, jsonMetadata, function (err, response) {
+    dpay.broadcast.accountUpdate(wif, account, owner, active, posting, memoKey, jsonMetadata, function (err, response) {
       if (err) {
         defer.reject(err);
       } else {
@@ -357,13 +357,13 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
     token = cryptoService.decryptKey(token);
 
     let defer = $q.defer();
-    defer.reject('Steem connect profile update not implemented yet.');
+    defer.reject('dPayID profile update not implemented yet.');
     return defer.promise;
   };
 
   const grantPostingPermission = (wif, accountData) => {
     const postingAuth = accountData.posting;
-    postingAuth.account_auths.push(['esteemapp', postingAuth.weight_threshold]);
+    postingAuth.account_auths.push(['dexplorer', postingAuth.weight_threshold]);
     return accountUpdate(wif, accountData.name, undefined, undefined, postingAuth, accountData.memo_key, accountData.json_metadata);
   };
 
@@ -383,7 +383,7 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
 
     let ind = 0;
     for (let i = 0; i < postingAuth.account_auths.length; i++) {
-      if (postingAuth.account_auths[i][0] === 'esteemapp') {
+      if (postingAuth.account_auths[i][0] === 'dexplorer') {
         ind = i;
         break;
       }
@@ -410,7 +410,7 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
 
     let defer = $q.defer();
 
-    steem.broadcast.transfer(wif, from, to, amount, memo, function (err, result) {
+    dpay.broadcast.transfer(wif, from, to, amount, memo, function (err, result) {
       if (err) {
         defer.reject(err);
       } else {
@@ -438,7 +438,7 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
 
     let defer = $q.defer();
 
-    steem.broadcast.transferToSavings(wif, from, to, amount, memo, function (err, result) {
+    dpay.broadcast.transferToSavings(wif, from, to, amount, memo, function (err, result) {
       if (err) {
         defer.reject(err);
       } else {
@@ -466,7 +466,7 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
 
     let defer = $q.defer();
 
-    steem.broadcast.transferFromSavings(wif, from, requestId, to, amount, memo, function (err, result) {
+    dpay.broadcast.transferFromSavings(wif, from, requestId, to, amount, memo, function (err, result) {
       if (err) {
         defer.reject(err);
       } else {
@@ -494,7 +494,7 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
 
     let defer = $q.defer();
 
-    steem.broadcast.transferToVesting(wif, from, to, amount, function (err, result) {
+    dpay.broadcast.transferToVesting(wif, from, to, amount, function (err, result) {
       if (err) {
         defer.reject(err);
       } else {
@@ -517,12 +517,12 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
     return defer.promise;
   };
 
-  const claimRewardBalance = (wif, account, rewardSteem, rewardSbd, rewardVests) => {
+  const claimRewardBalance = (wif, account, rewardDPay, rewardBbd, rewardVests) => {
     wif = cryptoService.decryptKey(wif);
 
     let defer = $q.defer();
 
-    steem.broadcast.claimRewardBalance(wif, account, rewardSteem, rewardSbd, rewardVests, function (err, result) {
+    dpay.broadcast.claimRewardBalance(wif, account, rewardDPay, rewardBbd, rewardVests, function (err, result) {
       if (err) {
         defer.reject(err);
       } else {
@@ -533,7 +533,7 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
     return defer.promise;
   };
 
-  const claimRewardBalanceSc = (token, account, rewardSteem, rewardSbd, rewardVests) => {
+  const claimRewardBalanceSc = (token, account, rewardDPay, rewardBbd, rewardVests) => {
     token = cryptoService.decryptKey(token);
 
     let defer = $q.defer();
@@ -542,7 +542,7 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
       accessToken: token
     });
 
-    api.claimRewardBalance(account, rewardSteem, rewardSbd, rewardVests, function (err, res) {
+    api.claimRewardBalance(account, rewardDPay, rewardBbd, rewardVests, function (err, res) {
       if (err) {
         defer.reject(err);
       } else {
@@ -553,12 +553,12 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
     return defer.promise;
   };
 
-  const escrowTransfer = (wif, from, to, agent, escrowId, sbdAmount, steemAmount, fee, ratificationDeadline, escrowExpiration, jsonMeta) => {
+  const escrowTransfer = (wif, from, to, agent, escrowId, bbdAmount, dpayAmount, fee, ratificationDeadline, escrowExpiration, jsonMeta) => {
     wif = cryptoService.decryptKey(wif);
 
     let defer = $q.defer();
 
-    steem.broadcast.escrowTransfer(wif, from, to, agent, escrowId, sbdAmount, steemAmount, fee, ratificationDeadline, escrowExpiration, jsonMeta, function (err, result) {
+    dpay.broadcast.escrowTransfer(wif, from, to, agent, escrowId, bbdAmount, dpayAmount, fee, ratificationDeadline, escrowExpiration, jsonMeta, function (err, result) {
       if (err) {
         defer.reject(err);
       } else {
@@ -569,10 +569,10 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
     return defer.promise;
   };
 
-  const escrowTransferSc = (from, to, agent, escrowId, sbdAmount, steemAmount, fee, ratificationDeadline, escrowExpiration, jsonMeta) => {
+  const escrowTransferSc = (from, to, agent, escrowId, bbdAmount, dpayAmount, fee, ratificationDeadline, escrowExpiration, jsonMeta) => {
     let defer = $q.defer();
 
-    scEsrowTransfer(from, to, agent, escrowId, sbdAmount, steemAmount, fee, ratificationDeadline, escrowExpiration, jsonMeta, () => {
+    scEsrowTransfer(from, to, agent, escrowId, bbdAmount, dpayAmount, fee, ratificationDeadline, escrowExpiration, jsonMeta, () => {
       defer.resolve('OK');
     }, () => {
       defer.reject(`The window closed before expected.`);
@@ -586,7 +586,7 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
 
     let defer = $q.defer();
 
-    steem.broadcast.escrowApprove(wif, from, to, agent, who, escrowId, approve, function (err, result) {
+    dpay.broadcast.escrowApprove(wif, from, to, agent, who, escrowId, approve, function (err, result) {
       if (err) {
         defer.reject(err);
       } else {
@@ -599,7 +599,7 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
 
   const escrowApproveSc = (from, to, agent, who, escrowId, approve) => {
     let defer = $q.defer();
-    defer.reject('Steem connect escrowApprove not implemented yet.');
+    defer.reject('dPayID escrowApprove not implemented yet.');
     return defer.promise;
   };
 
@@ -608,7 +608,7 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
 
     let defer = $q.defer();
 
-    steem.broadcast.escrowDispute(wif, from, to, agent, who, escrowId, function (err, result) {
+    dpay.broadcast.escrowDispute(wif, from, to, agent, who, escrowId, function (err, result) {
       if (err) {
         defer.reject(err);
       } else {
@@ -621,16 +621,16 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
 
   const escrowDisputeSc = (from, to, agent, who, escrowId) => {
     let defer = $q.defer();
-    defer.reject('Steem connect escrowDispute not implemented yet.');
+    defer.reject('dPayID escrowDispute not implemented yet.');
     return defer.promise;
   };
 
-  const escrowRelease = (wif, from, to, agent, who, receiver, escrowId, sbdAmount, steemAmount) => {
+  const escrowRelease = (wif, from, to, agent, who, receiver, escrowId, bbdAmount, dpayAmount) => {
     wif = cryptoService.decryptKey(wif);
 
     let defer = $q.defer();
 
-    steem.broadcast.escrowRelease(wif, from, to, agent, who, receiver, escrowId, sbdAmount, steemAmount, function (err, result) {
+    dpay.broadcast.escrowRelease(wif, from, to, agent, who, receiver, escrowId, bbdAmount, dpayAmount, function (err, result) {
       if (err) {
         defer.reject(err);
       } else {
@@ -641,9 +641,9 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
     return defer.promise;
   };
 
-  const escrowReleaseSc = (from, to, agent, who, receiver, escrowId, sbdAmount, steemAmount) => {
+  const escrowReleaseSc = (from, to, agent, who, receiver, escrowId, bbdAmount, dpayAmount) => {
     let defer = $q.defer();
-    defer.reject('Steem connect escrowDispute not implemented yet.');
+    defer.reject('dPayID escrowDispute not implemented yet.');
     return defer.promise;
   };
 
@@ -652,7 +652,7 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
 
     let defer = $q.defer();
 
-    steem.broadcast.setWithdrawVestingRoute(wif, from, to, percent, autoVest, function (err, result) {
+    dpay.broadcast.setWithdrawVestingRoute(wif, from, to, percent, autoVest, function (err, result) {
       if (err) {
         defer.reject(err);
       } else {
@@ -667,7 +667,7 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
     token = cryptoService.decryptKey(token);
 
     let defer = $q.defer();
-    defer.reject('Steem connect setWithdrawVestingRoute not implemented yet.');
+    defer.reject('dPayID setWithdrawVestingRoute not implemented yet.');
     return defer.promise;
   };
 
@@ -676,7 +676,7 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
 
     let defer = $q.defer();
 
-    steem.broadcast.withdrawVesting(wif, account, vestingShares, function (err, result) {
+    dpay.broadcast.withdrawVesting(wif, account, vestingShares, function (err, result) {
       if (err) {
         defer.reject(err);
       } else {
@@ -689,7 +689,7 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
 
   const withdrawVestingSc = (account, vestingShares) => {
     let defer = $q.defer();
-    defer.reject('Steem connect withdrawVesting not implemented yet.');
+    defer.reject('dPayID withdrawVesting not implemented yet.');
     return defer.promise;
   };
 
@@ -698,7 +698,7 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
 
     let defer = $q.defer();
 
-    steem.broadcast.delegateVestingShares(wif, delegator, delegatee, vestingShares, function (err, result) {
+    dpay.broadcast.delegateVestingShares(wif, delegator, delegatee, vestingShares, function (err, result) {
       if (err) {
         defer.reject(err);
       } else {
@@ -738,7 +738,7 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
 
     let defer = $q.defer();
 
-    steem.broadcast.accountWitnessVote(wif, account, witness, approve, function (err, result) {
+    dpay.broadcast.accountWitnessVote(wif, account, witness, approve, function (err, result) {
       if (err) {
         defer.reject(err);
       } else {
@@ -766,7 +766,7 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
 
     let defer = $q.defer();
 
-    steem.broadcast.accountWitnessProxy(wif, account, proxy, function (err, result) {
+    dpay.broadcast.accountWitnessProxy(wif, account, proxy, function (err, result) {
       if (err) {
         defer.reject(err);
       } else {
@@ -945,11 +945,11 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
         return transferFromSavingsSc(from, requestId, to, amount, memo);
       }
     },
-    escrowTransfer: (wif = null, from, to, agent, escrowId, sbdAmount, steemAmount, fee, ratificationDeadline, escrowExpiration, jsonMeta) => {
+    escrowTransfer: (wif = null, from, to, agent, escrowId, bbdAmount, dpayAmount, fee, ratificationDeadline, escrowExpiration, jsonMeta) => {
       if (wif) {
-        return escrowTransfer(wif, from, to, agent, escrowId, sbdAmount, steemAmount, fee, ratificationDeadline, escrowExpiration, jsonMeta);
+        return escrowTransfer(wif, from, to, agent, escrowId, bbdAmount, dpayAmount, fee, ratificationDeadline, escrowExpiration, jsonMeta);
       } else {
-        return escrowTransferSc(from, to, agent, escrowId, sbdAmount, steemAmount, fee, ratificationDeadline, escrowExpiration, jsonMeta);
+        return escrowTransferSc(from, to, agent, escrowId, bbdAmount, dpayAmount, fee, ratificationDeadline, escrowExpiration, jsonMeta);
       }
     },
     escrowApprove: (wif = null, from, to, agent, who, escrowId, approve) => {
@@ -966,11 +966,11 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
         return escrowDisputeSc(from, to, agent, who, escrowId);
       }
     },
-    escrowRelease: (wif = null, from, to, agent, who, receiver, escrowId, sbdAmount, steemAmount) => {
+    escrowRelease: (wif = null, from, to, agent, who, receiver, escrowId, bbdAmount, dpayAmount) => {
       if (wif) {
-        return escrowRelease(wif, from, to, agent, who, receiver, escrowId, sbdAmount, steemAmount);
+        return escrowRelease(wif, from, to, agent, who, receiver, escrowId, bbdAmount, dpayAmount);
       } else {
-        return escrowReleaseSc(from, to, agent, who, receiver, escrowId, sbdAmount, steemAmount);
+        return escrowReleaseSc(from, to, agent, who, receiver, escrowId, bbdAmount, dpayAmount);
       }
     },
     transferToVesting: (wif = null, from, to, amount) => {
@@ -980,17 +980,17 @@ export default ($rootScope, steemApi, $q, cryptoService) => {
         return transferToVestingSc(from, to, amount);
       }
     },
-    claimRewardBalance: (rewardSteem, rewardSbd, rewardVests) => {
+    claimRewardBalance: (rewardDPay, rewardBbd, rewardVests) => {
       const account = $rootScope.user.username;
 
       switch ($rootScope.user.type) {
         case 's':
           const wif = getProperWif(['posting']);
-          return claimRewardBalance(wif, account, rewardSteem, rewardSbd, rewardVests);
+          return claimRewardBalance(wif, account, rewardDPay, rewardBbd, rewardVests);
           break;
         case 'sc':
           const token = getAccessToken();
-          return claimRewardBalanceSc(token, account, rewardSteem, rewardSbd, rewardVests);
+          return claimRewardBalanceSc(token, account, rewardDPay, rewardBbd, rewardVests);
           break;
       }
     },

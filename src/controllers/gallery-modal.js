@@ -1,10 +1,10 @@
-export default ($scope, $rootScope, $uibModalInstance, eSteemService, activeUsername, afterClick) => {
+export default ($scope, $rootScope, $uibModalInstance, dExplorerService, activeUsername, afterClick) => {
 
   $scope.loadingImages = true;
   $scope.images = [];
 
   const fetchImages = () => {
-    eSteemService.getImages(activeUsername()).then((resp) => {
+    dExplorerService.getImages(activeUsername()).then((resp) => {
       $scope.images = resp.data;
 
     }).catch((e) => {

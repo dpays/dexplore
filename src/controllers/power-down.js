@@ -1,4 +1,4 @@
-export default ($scope, $rootScope, $routeParams, $filter, $location, $uibModal, $timeout, $window, autoCancelTimeout, userService, steemService, steemAuthenticatedService) => {
+export default ($scope, $rootScope, $routeParams, $filter, $location, $uibModal, $timeout, $window, autoCancelTimeout, userService, dpayService, dpayAuthenticatedService) => {
   const curAccount = $routeParams.account;
   const accountList = userService.getAll();
 
@@ -17,7 +17,7 @@ export default ($scope, $rootScope, $routeParams, $filter, $location, $uibModal,
   $scope.amountVest = 0.001;
   $scope.amountVestFormatted = 0.001;
   $scope.amountSp = 0.000;
-  $scope.steemPerWeek = 0.000;
+  $scope.dpayPerWeek = 0.000;
 
   $scope.withdrawRoutes = [];
 
@@ -48,7 +48,7 @@ export default ($scope, $rootScope, $routeParams, $filter, $location, $uibModal,
 
         const sp = vests2sp(v);
         $scope.amountSp = sp;
-        $scope.steemPerWeek = Math.round(sp / 13 * 1000) / 1000;
+        $scope.dpayPerWeek = Math.round(sp / 13 * 1000) / 1000;
       },
       translate: function (value, sliderId, label) {
         if (label === 'model') {
@@ -67,7 +67,7 @@ export default ($scope, $rootScope, $routeParams, $filter, $location, $uibModal,
   $scope.deleteWithDrawAccount = (a) => {
     const _delete = (a) => {
       $scope.deletingWithDrawAccount = true;
-      steemAuthenticatedService.setWithdrawVestingRoute(a, 0, false).then((resp) => {
+      dpayAuthenticatedService.setWithdrawVestingRoute(a, 0, false).then((resp) => {
         loadWithdrawRoutes();
       }).catch((e) => {
         $rootScope.showError(e);
@@ -120,7 +120,7 @@ export default ($scope, $rootScope, $routeParams, $filter, $location, $uibModal,
       const wif = fromAccount.type === 's' ? fromAccount.keys.active : null;
 
       $scope.processing = true;
-      steemAuthenticatedService.withdrawVesting(wif, curAccount, vestingShares).then((resp) => {
+      dpayAuthenticatedService.withdrawVesting(wif, curAccount, vestingShares).then((resp) => {
 
       }).catch((e) => {
         $rootScope.showError(e);
@@ -144,7 +144,7 @@ export default ($scope, $rootScope, $routeParams, $filter, $location, $uibModal,
       const wif = fromAccount.type === 's' ? fromAccount.keys.active : null;
 
       $scope.processing = true;
-      steemAuthenticatedService.withdrawVesting(wif, curAccount, vestingShares).then((resp) => {
+      dpayAuthenticatedService.withdrawVesting(wif, curAccount, vestingShares).then((resp) => {
 
       }).catch((e) => {
         $rootScope.showError(e);
@@ -163,7 +163,7 @@ export default ($scope, $rootScope, $routeParams, $filter, $location, $uibModal,
   const loadAccount = () => {
     $scope.fetchingAccount = true;
 
-    return steemService.getAccounts([curAccount]).then((resp) => {
+    return dpayService.getAccounts([curAccount]).then((resp) => {
       const account = resp[0];
 
       $scope.amountSlider.options.ceil = account.vesting_shares.split(' ')[0];
@@ -185,7 +185,7 @@ export default ($scope, $rootScope, $routeParams, $filter, $location, $uibModal,
   const loadWithdrawRoutes = () => {
     $scope.fetchingWithdrawRoutes = true;
 
-    return steemService.getWithdrawRoutes(curAccount).then((resp) => {
+    return dpayService.getWithdrawRoutes(curAccount).then((resp) => {
       resp.sort((a, b) => {
         return a.percent - b.percent
       });
@@ -198,7 +198,7 @@ export default ($scope, $rootScope, $routeParams, $filter, $location, $uibModal,
   };
 
   const vests2sp = (vests) => {
-    return $filter('steemPower')(vests.toString());
+    return $filter('dpayPower')(vests.toString());
   };
 
   const formatVests = (v) => {

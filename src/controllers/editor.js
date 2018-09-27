@@ -13,7 +13,7 @@ export const createPermlink = (title) => {
 
   let perm = `${slug.toString()}-${rnd}est`;
 
-  // STEEMIT_MAX_PERMLINK_LENGTH
+  // DPAY_MAX_PERMLINK_LENGTH
   if (perm.length > 255) {
     perm = perm.substring(perm.length - 255, perm.length)
   }
@@ -29,23 +29,23 @@ const makeOptions = (author, permlink, operationType) => {
     allow_votes: true,
     author: author,
     permlink: permlink,
-    max_accepted_payout: '1000000.000 SBD',
-    percent_steem_dollars: 10000,
-    extensions: [[0, {'beneficiaries': [{'account': 'esteemapp', 'weight': 1000}]}]]
+    max_accepted_payout: '1000000.000 BBD',
+    percent_dpay_dollars: 10000,
+    extensions: [[0, {'beneficiaries': [{'account': 'dexplorer', 'weight': 1000}]}]]
   };
 
   switch (operationType) {
     case 'default':
-      a.max_accepted_payout = '1000000.000 SBD';
-      a.percent_steem_dollars = 10000;
+      a.max_accepted_payout = '1000000.000 BBD';
+      a.percent_dpay_dollars = 10000;
       break;
-    case 'sp':
-      a.max_accepted_payout = '1000000.000 SBD';
-      a.percent_steem_dollars = 0;
+    case 'bp':
+      a.max_accepted_payout = '1000000.000 BBD';
+      a.percent_dpay_dollars = 0;
       break;
     case 'dp':
-      a.max_accepted_payout = '0.000 SBD';
-      a.percent_steem_dollars = 10000;
+      a.max_accepted_payout = '0.000 BBD';
+      a.percent_dpay_dollars = 10000;
       break;
   }
 
@@ -55,9 +55,9 @@ const makeOptions = (author, permlink, operationType) => {
 const makeJsonMetadata = (meta, tags, appVer) => {
   return Object.assign({}, meta, {
     tags: tags,
-    app: 'esteem/' + appVer + '-surfer',
+    app: 'dexplorer/' + appVer + '-surfer',
     format: 'markdown+html',
-    community: 'esteem.app'
+    community: 'dexplorer.io'
   });
 };
 
@@ -115,13 +115,13 @@ export const extractMetadata = (body) => {
   return out;
 };
 
-export default ($scope, $rootScope, $routeParams, $filter, $location, $window, $timeout, $interval, $uibModal, eSteemService, steemService, activeUsername, steemAuthenticatedService, editorService, helperService, appVersion) => {
+export default ($scope, $rootScope, $routeParams, $filter, $location, $window, $timeout, $interval, $uibModal, dExplorerService, dpayService, activeUsername, dpayAuthenticatedService, editorService, helperService, appVersion) => {
 
   const hasPermission = (account) => {
     let hasPerm = false;
 
     account.posting.account_auths.forEach(function (auth) {
-      if (auth[0] === 'esteemapp') {
+      if (auth[0] === 'dexplorer') {
         hasPerm = true;
       }
     });
@@ -166,7 +166,7 @@ export default ($scope, $rootScope, $routeParams, $filter, $location, $window, $
   } else if ($routeParams.author && $routeParams.permlink) {
 
     $scope.fetchingContent = true;
-    steemService.getContent($routeParams.author, $routeParams.permlink).then((resp) => {
+    dpayService.getContent($routeParams.author, $routeParams.permlink).then((resp) => {
       $scope.editMode = true;
       editingContent = resp;
 
@@ -359,9 +359,9 @@ export default ($scope, $rootScope, $routeParams, $filter, $location, $window, $
 
     let prms = null;
     if ($scope.fromDraft) {
-      prms = eSteemService.updateDraft($scope.draftUser, $scope.draftId, $scope.title, $scope.body, $scope.tags);
+      prms = dExplorerService.updateDraft($scope.draftUser, $scope.draftId, $scope.title, $scope.body, $scope.tags);
     } else {
-      prms = eSteemService.addDraft(activeUsername(), $scope.title, $scope.body, $scope.tags);
+      prms = dExplorerService.addDraft(activeUsername(), $scope.title, $scope.body, $scope.tags);
     }
 
     prms.then((resp) => {
@@ -395,7 +395,7 @@ export default ($scope, $rootScope, $routeParams, $filter, $location, $window, $
     $scope.posting = true;
     $scope.processing = true;
 
-    steemAuthenticatedService.comment('', parentPermlink, author, permlink, title, body, jsonMeta, options, voteWeight).then((resp) => {
+    dpayAuthenticatedService.comment('', parentPermlink, author, permlink, title, body, jsonMeta, options, voteWeight).then((resp) => {
       clearForm();
       $rootScope.showSuccess($filter('translate')('POST_SUBMITTED'));
       $rootScope.selectedPost = null;
@@ -431,7 +431,7 @@ export default ($scope, $rootScope, $routeParams, $filter, $location, $window, $
     $scope.posting = true;
     $scope.processing = true;
 
-    steemAuthenticatedService.comment('', parentPermlink, author, permlink, title, body, jsonMetadata, null, null).then((resp) => {
+    dpayAuthenticatedService.comment('', parentPermlink, author, permlink, title, body, jsonMetadata, null, null).then((resp) => {
       $rootScope.showSuccess($filter('__')('POST_UPDATED'));
       $rootScope.$broadcast('CONTENT_UPDATED', {contentId: editingContent.id});
       $rootScope.selectedPost = null;
@@ -445,7 +445,7 @@ export default ($scope, $rootScope, $routeParams, $filter, $location, $window, $
   };
 
   const getAccount = () => {
-    return steemService.getAccounts([activeUsername()]).then((resp) => {
+    return dpayService.getAccounts([activeUsername()]).then((resp) => {
       if (resp.length === 1 && resp[0].name) {
         return resp[0];
       } else {
@@ -460,8 +460,8 @@ export default ($scope, $rootScope, $routeParams, $filter, $location, $window, $
       return
     }
 
-    // exception for esteemapp
-    if (activeUsername() === 'esteemapp') {
+    // exception for dexplorer
+    if (activeUsername() === 'dexplorer') {
       $scope.hasPerm = true;
       return
     }
@@ -489,7 +489,7 @@ export default ($scope, $rootScope, $routeParams, $filter, $location, $window, $
       $scope.processing = true;
       $scope.updating = true;
 
-      steemAuthenticatedService.grantPostingPermission(account).then((resp) => {
+      dpayAuthenticatedService.grantPostingPermission(account).then((resp) => {
         $rootScope.showSuccess('Posting permission granted');
         detectPerm();
       }).catch((e) => {
@@ -515,7 +515,7 @@ export default ($scope, $rootScope, $routeParams, $filter, $location, $window, $
       $scope.processing = true;
       $scope.updating = true;
 
-      steemAuthenticatedService.revokePostingPermission(account).then(() => {
+      dpayAuthenticatedService.revokePostingPermission(account).then(() => {
         $rootScope.showSuccess('Posting permission removed');
         detectPerm();
       }).catch((e) => {
@@ -540,7 +540,7 @@ export default ($scope, $rootScope, $routeParams, $filter, $location, $window, $
                     <h4 class="modal-title">{{ 'SCHEDULE' | translate }} </h4>
                  </div>
                  <div class="modal-body">
-                    <input type="datetime-local" class="form-control" ng-model="dt" required>                  
+                    <input type="datetime-local" class="form-control" ng-model="dt" required>
                  </div>
                   <div class="modal-footer">
                     <button class="btn btn-primary" ng-click="send()" ng-disabled="sending"><i class="fa fa-spin fa-spinner fa-circle-o-notch" ng-if="sending"></i>  {{ 'SCHEDULE' | translate }}</button>
@@ -614,7 +614,7 @@ export default ($scope, $rootScope, $routeParams, $filter, $location, $window, $
 };
 
 
-const scheduleModalController = ($scope, $rootScope, $filter, $location, $uibModalInstance, eSteemService, activeUsername, appVersion, title, body, tags, operationType, vote) => {
+const scheduleModalController = ($scope, $rootScope, $filter, $location, $uibModalInstance, dExplorerService, activeUsername, appVersion, title, body, tags, operationType, vote) => {
 
   moment.locale($rootScope.language);
 
@@ -630,7 +630,7 @@ const scheduleModalController = ($scope, $rootScope, $filter, $location, $uibMod
     const meta = extractMetadata(body);
     const jsonMetadata = makeJsonMetadata(meta, tags, appVersion);
 
-    eSteemService.schedule(activeUsername(), title, permlink, jsonMetadata, tags, body, operationType, vote, scheduleDate).then((resp) => {
+    dExplorerService.schedule(activeUsername(), title, permlink, jsonMetadata, tags, body, operationType, vote, scheduleDate).then((resp) => {
       if (resp.data.errors) {
         $rootScope.showError(resp.data.errors);
       } else {

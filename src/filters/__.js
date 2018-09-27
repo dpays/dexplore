@@ -1,5 +1,5 @@
 export default ($sce) => {
-  // Temporary filter to figure out different language entries from eSteem mobile app's locale files
+  // Temporary filter to figure out different language entries from dExplorer mobile app's locale files
   return (s) => {
     switch (s) {
       case 'CUSTOM_SERVER':
@@ -34,24 +34,24 @@ export default ($sce) => {
         return 'Voting Power';
       case 'POST_COUNT':
         return 'Post Count';
-      case 'RESTEEMED':
-        return 'resteemed';
-      case 'RESTEEMED_BY':
-        return 'resteemed by';
+      case 'REPOSTED':
+        return 'reposted';
+      case 'REPOSTED_BY':
+        return 'reposted by';
       case 'GO_BACK':
         return 'Back';
       case 'PLATFORM_NAME':
-        return 'Steem';
+        return 'dPay';
       case 'PLATFORM_POWER':
-        return 'Steem Power';
+        return 'BEX Power';
       case 'PLATFORM_DOLLAR':
-        return 'Steem Dollar';
+        return 'BEX Dollar';
       case 'PLATFORM_L_UNIT':
-        return 'STEEM';
+        return 'BEX';
       case 'PLATFORM_P_UNIT':
-        return 'SP';
+        return 'BP';
       case 'PLATFORM_D_UNIT':
-        return 'SBD';
+        return 'BBD';
       case 'NO_DATA':
         return 'No Data';
       case 'LOGIN_PUBLIC_KEY_ERROR':
@@ -313,7 +313,7 @@ export default ($sce) => {
       case 'CONNECT2MOBILE_MEMO_DESC':
         return 'The memo key is used to create and read memos.';
       case 'CONNECT2MOBILE_DOWNLOAD':
-        return 'Download eSteem Mobile';
+        return 'Download dExplorer Mobile';
       default:
         return s;
     }

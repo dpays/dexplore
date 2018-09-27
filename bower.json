@@ -1,8 +1,8 @@
 {
-  "name": "esteem-desktop",
-  "description": "eSteem Desktop",
+  "name": "dexplorer-desktop",
+  "description": "dExplorer Desktop",
   "license": "MIT",
-  "homepage": "http://esteem.ws",
+  "homepage": "http://dexplorer.io",
   "private": true,
   "dependencies": {
     "components-font-awesome": "^4.7.0",

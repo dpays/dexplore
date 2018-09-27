@@ -20,8 +20,8 @@ document.addEventListener('drop', function (event) {
 }, false);
 
 
-// A http server for steem connect redirect urls
-import {startHelperServer} from "./helpers/steem-connnect-server-helper";
+// A http server for dPayID redirect urls
+import {startHelperServer} from "./helpers/dpayid-server-helper";
 startHelperServer();
 
 
@@ -33,4 +33,3 @@ window.onload = () => {
     document.body.style.visibility = 'visible';
   }, 300);
 };
-

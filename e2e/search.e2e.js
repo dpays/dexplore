@@ -23,7 +23,7 @@ describe("search", () => {
 
   it('20- Fill search input', async function () {
     await this.app.client.click('.navbar-form .txt-search');
-    await this.app.client.keys('esteemapp');
+    await this.app.client.keys('dexplorer');
   });
 
   it('30- Search button should be enabled', async function () {
@@ -55,7 +55,7 @@ describe("search", () => {
 
   it('80- Search query should be persisted', async function () {
     const v = await this.app.client.getValue('.navbar-form .txt-search');
-    expect(v).to.deep.equal('esteemapp');
+    expect(v).to.deep.equal('dexplorer');
   });
 
   it('90- Scroll down', async function () {
@@ -89,7 +89,7 @@ describe("search", () => {
   }).timeout(apiTimeout);
 
   it('140- Enter a permlink to search input', async function () {
-    const p = '@good-karma/facebook-is-buying-steem-5ddbec987f18a';
+    const p = '@jared/welcoming-dexplorer-to-the-dweb';
     await this.app.client.execute(`document.querySelector('.navbar-form .txt-search').value='${p}';document.querySelector('.navbar-form .txt-search').dispatchEvent(new Event('change'))`);
   });
 

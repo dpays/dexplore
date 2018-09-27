@@ -1,4 +1,4 @@
-import steem from 'steem';
+import dpay from 'dpayjs';
 
 export default ($rootScope, cryptoService) => {
   const transferMemoFilter = (op) => {
@@ -21,7 +21,7 @@ export default ($rootScope, cryptoService) => {
     }
 
     if($rootScope.user.type === 'sc'){
-      return '**Use traditional steem login to see memo**'
+      return '**Use traditional dPay login to see memo**'
     }
 
     let privateMemoKey = null;
@@ -32,7 +32,7 @@ export default ($rootScope, cryptoService) => {
     }
 
     try {
-      return steem.memo.decode(privateMemoKey, op.memo);
+      return dpay.memo.decode(privateMemoKey, op.memo);
     } catch (e) {
       return '**Invalid memo**';
     }
@@ -41,5 +41,3 @@ export default ($rootScope, cryptoService) => {
   transferMemoFilter.$stateful = true;
   return transferMemoFilter;
 };
-
-

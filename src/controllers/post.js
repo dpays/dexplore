@@ -13,7 +13,7 @@ const commentBodyFilter = (comment) => {
     return comment.body;
   }
 
-  // Requires traditional steem login
+  // Requires traditional dPay login
   if ($rootScope.user.type === 'sc') {
     return comment.body;
   }
@@ -44,14 +44,14 @@ const commentBodyFilter = (comment) => {
 
   // Decode
   try {
-    return steem.memo.decode(privateMemoKey, comment.body);
+    return dpay.memo.decode(privateMemoKey, comment.body);
   } catch (e) {
     return '*encrypted comment*'
   }
 };
 
 
-export default ($scope, $rootScope, $routeParams, $filter, $timeout, $uibModal, $location, $q, steemService, eSteemService, helperService, activeUsername, activePostFilter, constants) => {
+export default ($scope, $rootScope, $routeParams, $filter, $timeout, $uibModal, $location, $q, dpayService, dExplorerService, helperService, activeUsername, activePostFilter, constants) => {
 
   let parent = $routeParams.parent;
   let author = $routeParams.author;
@@ -177,7 +177,7 @@ export default ($scope, $rootScope, $routeParams, $filter, $timeout, $uibModal, 
   };
 
   const loadState = () => {
-    return steemService.getState(routePath).then(stateData => {
+    return dpayService.getState(routePath).then(stateData => {
       pathData = stateData;
 
       let content = stateData.content[contentPath];
@@ -280,7 +280,7 @@ export default ($scope, $rootScope, $routeParams, $filter, $timeout, $uibModal, 
       defer.resolve($rootScope.selectedPost);
     } else {
       // When clicked outside from posts lists (post body) or refreshed in development environment
-      steemService.getContent(author, permlink).then((resp) => {
+      dpayService.getContent(author, permlink).then((resp) => {
         defer.resolve(resp);
       }).catch((e) => {
         defer.reject(e)
@@ -363,7 +363,7 @@ export default ($scope, $rootScope, $routeParams, $filter, $timeout, $uibModal, 
   $scope.loadSimilar = () => {
     $scope.loadingRelatedContents = true;
     if (!$scope.isComment) {
-      steemService.getDiscussionsBy('Hot', $scope.post.parent_permlink, null, null, 30).then((resp) => {
+      dpayService.getDiscussionsBy('Hot', $scope.post.parent_permlink, null, null, 30).then((resp) => {
         $scope.relatedContents = resp
           .filter(r => r.permlink !== permlink)
           // exclude active user's posts
@@ -400,7 +400,7 @@ export default ($scope, $rootScope, $routeParams, $filter, $timeout, $uibModal, 
 
     $scope.bookmarking = true;
     $scope.bookmarked = false;
-    eSteemService.addBookmark(activeUsername(), $scope.post).then((resp) => {
+    dExplorerService.addBookmark(activeUsername(), $scope.post).then((resp) => {
       $scope.bookmarked = true;
       $rootScope.$broadcast('newBookmark', {id: $scope.post.id});
     }).catch((e) => {

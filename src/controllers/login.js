@@ -1,7 +1,7 @@
-import steem from 'steem';
-import {scLogin} from '../helpers/steem-connect-helper';
+import dpay from 'dpayjs';
+import {scLogin} from '../helpers/dpayid-helper';
 
-export default ($scope, $rootScope, $timeout, $location, $uibModalInstance, $q, $window, $filter, steemService, storageService, userService, activeUsername, loginMessage, afterLogin, onOpen) => {
+export default ($scope, $rootScope, $timeout, $location, $uibModalInstance, $q, $window, $filter, dpayService, storageService, userService, activeUsername, loginMessage, afterLogin, onOpen) => {
 
   onOpen();
 
@@ -28,17 +28,17 @@ export default ($scope, $rootScope, $timeout, $location, $uibModalInstance, $q, 
     storageService.set('last_username', username);
 
     // Warn user if entered a public key
-    if (steem.auth.isPubkey(code)) {
+    if (dpay.auth.isPubkey(code)) {
       $scope.loginErrPublicKey = true;
       return false;
     }
 
     // True if the code entered is password else false
-    let codeIsPassword = !steem.auth.isWif(code);
+    let codeIsPassword = !dpay.auth.isWif(code);
 
     $scope.processing = true;
 
-    steemService.getAccounts([username]).then((r) => {
+    dpayService.getAccounts([username]).then((r) => {
 
       // User not found
       if (r && r.length === 0) {
@@ -64,7 +64,7 @@ export default ($scope, $rootScope, $timeout, $location, $uibModalInstance, $q, 
 
         // Get all private keys by username and password
         const username = rUser.name;
-        const userKeys = steem.auth.getPrivateKeys(username, code);
+        const userKeys = dpay.auth.getPrivateKeys(username, code);
 
         // Compare remote user keys and generated keys
         for (let k  in rUserPublicKeys) {
@@ -82,7 +82,7 @@ export default ($scope, $rootScope, $timeout, $location, $uibModalInstance, $q, 
 
       } else {
         // With wif
-        let publicWif = steem.auth.wifToPublic(code);
+        let publicWif = dpay.auth.wifToPublic(code);
 
         for (let k  in rUserPublicKeys) {
           let v = rUserPublicKeys[k];
@@ -122,7 +122,7 @@ export default ($scope, $rootScope, $timeout, $location, $uibModalInstance, $q, 
     $uibModalInstance.dismiss('cancel');
   };
 
-  // Flag to prevent reopen steemconnect dialog window
+  // Flag to prevent reopen dPayID dialog window
   let scWindowFlag = true;
   $scope.loginWith = () => {
 

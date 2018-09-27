@@ -1,4 +1,4 @@
-import steem from 'steem';
+import dpay from 'dpayjs';
 
 export default () => {
   return {
@@ -26,7 +26,7 @@ export default () => {
         </div>
         <div class="editor-buttons">
           <div class="pull-left">
-            <label><input type="checkbox" ng-model="encrypt.val" ng-disabled="!canEncrypt"> Encrypt <span class="text-danger" ng-if="!canEncrypt"><em>(cannot encrypt with steem connect login)</em></span></label> 
+            <label><input type="checkbox" ng-model="encrypt.val" ng-disabled="!canEncrypt"> Encrypt <span class="text-danger" ng-if="!canEncrypt"><em>(cannot encrypt with dPayID login)</em></span></label>
           </div>
           <div class="pull-right">
             <button class="btn btn-default btn-sm" ng-disabled="sending" ng-click="cancel()">{{ 'CANCEL' | translate }}</button>
@@ -41,7 +41,7 @@ export default () => {
           <div class="markdown-view mini-markdown" ng-bind-html="commentBody | markDown2Html"></div>
         </div>
      </div>`,
-    controller: ($scope, $rootScope, $filter, steemAuthenticatedService, steemService, activeUsername, cryptoService, appVersion) => {
+    controller: ($scope, $rootScope, $filter, dpayAuthenticatedService, dpayService, activeUsername, cryptoService, appVersion) => {
 
       if ($scope.mode === 'edit') {
         $scope.commentBody = $filter('commentBody')($scope.content);
@@ -56,7 +56,7 @@ export default () => {
         val: jsonMeta.encrypted === 1
       };
 
-      // Steem connect login cannot encrypt
+      // dPayID login cannot encrypt
       if($rootScope.user && $rootScope.user.type === 's'){
         $scope.canEncrypt = true;
       } else {
@@ -77,9 +77,9 @@ export default () => {
           allow_votes: true,
           author: author,
           permlink: permlink,
-          max_accepted_payout: '1000000.000 SBD',
-          percent_steem_dollars: 10000,
-          extensions: [[0, {'beneficiaries': [{'account': 'esteemapp', 'weight': 1000}]}]]
+          max_accepted_payout: '1000000.000 BBD',
+          percent_dpay_dollars: 10000,
+          extensions: [[0, {'beneficiaries': [{'account': 'dexplorer', 'weight': 1000}]}]]
         }
       };
 
@@ -91,10 +91,10 @@ export default () => {
         let body = $scope.commentBody.trim();
 
         const jsonMetadata = {
-          tags: c.json_metadata ? JSON.parse(c.json_metadata).tags : ['esteem'],
-          app: 'esteem/' + appVersion + '-surfer',
+          tags: c.json_metadata ? JSON.parse(c.json_metadata).tags : ['dexplorer'],
+          app: 'dexplorer/' + appVersion + '-desktop',
           format: 'markdown+html',
-          community: 'esteem.app',
+          community: 'dexplorer.io',
           encrypted: $scope.encrypt.val ? 1 : 0
         };
 
@@ -102,7 +102,7 @@ export default () => {
           const senderPrivateKey = cryptoService.decryptKey($rootScope.user.keys['posting']);
           const receiverPublicKey = $scope.content.author_data.posting.key_auths.pop()[0];
 
-          body = steem.memo.encode(senderPrivateKey, receiverPublicKey, `#${body}`);
+          body = dpay.memo.encode(senderPrivateKey, receiverPublicKey, `#${body}`);
         }
 
         if ($scope.mode === 'edit') {
@@ -115,7 +115,7 @@ export default () => {
           let bExist = false;
 
           for (let b of c.beneficiaries) {
-            if (b && b.account === 'esteemapp') {
+            if (b && b.account === 'dexplorer') {
               bExist = true;
               break;
             }
@@ -134,11 +134,11 @@ export default () => {
         }
 
         $scope.sending = true;
-        steemAuthenticatedService.comment(parentAuthor, parentPermlink, author, permlink, '', body, jsonMetadata, options).then((resp) => {
+        dpayAuthenticatedService.comment(parentAuthor, parentPermlink, author, permlink, '', body, jsonMetadata, options).then((resp) => {
           const routePath = `/${parentPermlink}/@${author}/${permlink}`;
           const contentPath = `${author}/${permlink}`;
 
-          steemService.getState(routePath).then((resp) => {
+          dpayService.getState(routePath).then((resp) => {
             const content = resp.content[contentPath];
             content.author_data = resp.accounts[author];
             $scope.afterSuccess()(content, $scope.mode);

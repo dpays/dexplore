@@ -3,7 +3,7 @@ import moment from 'moment';
 import {amountFormatCheck, formatStrAmount} from './helper';
 import badActors from '../data/bad-actors.json';
 
-export default ($scope, $rootScope, $routeParams, $location, $timeout, $filter, autoCancelTimeout, steemService, userService, steemAuthenticatedService, activeUsername) => {
+export default ($scope, $rootScope, $routeParams, $location, $timeout, $filter, autoCancelTimeout, dpayService, userService, dpayAuthenticatedService, activeUsername) => {
 
   const curAccount = $routeParams.account;
   const accountList = userService.getAll();
@@ -23,7 +23,7 @@ export default ($scope, $rootScope, $routeParams, $location, $timeout, $filter, 
   $scope.to = '';
   $scope.agent = '';
   $scope.amount = '0.001';
-  $scope.asset = 'STEEM';
+  $scope.asset = 'BEX';
   $scope.memo = '';
   $scope.deadline = moment().add(1, 'hour').startOf('hour').seconds(0).milliseconds(0).toDate();
   $scope.expiration = moment().add(2, 'hour').startOf('hour').seconds(0).milliseconds(0).toDate();
@@ -68,7 +68,7 @@ export default ($scope, $rootScope, $routeParams, $location, $timeout, $filter, 
       $scope.toData = null;
       $scope.fetchingTo = true;
 
-      steemService.getAccounts([$scope.to]).then((resp) => {
+      dpayService.getAccounts([$scope.to]).then((resp) => {
         if (resp.length === 0) {
           $scope.toErr = $filter('translate')('NONEXIST_USER');
           return;
@@ -99,7 +99,7 @@ export default ($scope, $rootScope, $routeParams, $location, $timeout, $filter, 
       $scope.agentData = null;
       $scope.fetchingAgent = true;
 
-      steemService.getAccounts([$scope.agent]).then((resp) => {
+      dpayService.getAccounts([$scope.agent]).then((resp) => {
         if (resp.length === 0) {
           $scope.agentErr = $filter('translate')('NONEXIST_USER');
           return;
@@ -113,8 +113,8 @@ export default ($scope, $rootScope, $routeParams, $location, $timeout, $filter, 
         }
 
         let escrowTerms = '-';
-        let escrowFeeSteem = 0.001;
-        let escrowFeeSbd = 0.001;
+        let escrowFeeDPay = 0.001;
+        let escrowFeeBbd = 0.001;
 
         if (jsonMeta.escrow) {
           if (jsonMeta.escrow.terms) {
@@ -122,17 +122,17 @@ export default ($scope, $rootScope, $routeParams, $location, $timeout, $filter, 
           }
 
           if (jsonMeta.escrow.fees) {
-            if (jsonMeta.escrow.fees.STEEM) {
-              escrowFeeSteem = jsonMeta.escrow.fees.STEEM
+            if (jsonMeta.escrow.fees.BEX) {
+              escrowFeeDPay = jsonMeta.escrow.fees.BEX
             }
 
-            if (jsonMeta.escrow.fees.SBD) {
-              escrowFeeSbd = jsonMeta.escrow.fees.SBD
+            if (jsonMeta.escrow.fees.BBD) {
+              escrowFeeBbd = jsonMeta.escrow.fees.BBD
             }
           }
         }
 
-        $scope.agentData.escrowInfo = {terms: escrowTerms, fees: {STEEM: escrowFeeSteem, SBD: escrowFeeSbd}};
+        $scope.agentData.escrowInfo = {terms: escrowTerms, fees: {BEX: escrowFeeDPay, BBD: escrowFeeBbd}};
       }).catch((e) => {
         $rootScope.showError(e);
       }).then((resp) => {
@@ -179,7 +179,7 @@ export default ($scope, $rootScope, $routeParams, $location, $timeout, $filter, 
   const loadFromAccount = () => {
     $scope.fetchingFromAccount = true;
 
-    return steemService.getAccounts([$scope.from]).then((resp) => {
+    return dpayService.getAccounts([$scope.from]).then((resp) => {
       return resp[0];
     }).catch((e) => {
       $rootScope.showError(e);
@@ -192,7 +192,7 @@ export default ($scope, $rootScope, $routeParams, $location, $timeout, $filter, 
   };
 
   const getBalance = (asset) => {
-    const k = (asset === 'STEEM' ? 'balance' : 'sbd_balance');
+    const k = (asset === 'BEX' ? 'balance' : 'bbd_balance');
     return $scope.account[k].split(' ')[0];
   };
 
@@ -221,8 +221,8 @@ export default ($scope, $rootScope, $routeParams, $location, $timeout, $filter, 
       const to = $scope.to.trim();
       const agent = $scope.agent.trim();
       const escrowId = (new Date().getTime()) >>> 0;
-      const sbd = $scope.asset === 'SBD' ? formatStrAmount($scope.amount, 'SBD') : '0.000 SBD';
-      const steem = $scope.asset === 'STEEM' ? formatStrAmount($scope.amount, 'STEEM') : '0.000 STEEM';
+      const bbd = $scope.asset === 'BBD' ? formatStrAmount($scope.amount, 'BBD') : '0.000 BBD';
+      const dpay = $scope.asset === 'BEX' ? formatStrAmount($scope.amount, 'BEX') : '0.000 BEX';
       const fee = `${$scope.agentData.escrowInfo.fees[$scope.asset]} ${$scope.asset}`;
       const deadlineDate = $scope.deadline;
       const expirationDate = $scope.expiration;
@@ -235,7 +235,7 @@ export default ($scope, $rootScope, $routeParams, $location, $timeout, $filter, 
       const wif = fromAccount.type === 's' ? fromAccount.keys.active : null;
 
       $scope.processing = true;
-      steemAuthenticatedService.escrowTransfer(wif, from, to, agent, escrowId, sbd, steem, fee, deadlineDate, expirationDate, JSON.stringify(jsonMeta)).then((resp) => {
+      dpayAuthenticatedService.escrowTransfer(wif, from, to, agent, escrowId, bbd, dpay, fee, deadlineDate, expirationDate, JSON.stringify(jsonMeta)).then((resp) => {
         $scope.newEscrowId = escrowId;
       }).catch((e) => {
         $rootScope.showError(e);

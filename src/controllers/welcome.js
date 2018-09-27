@@ -1,4 +1,4 @@
-export default ($scope, $sce, $location, helperService, eSteemService, appVersion) => {
+export default ($scope, $sce, $location, helperService, dExplorerService, appVersion) => {
 
   $scope.description = (h) => {
     return $sce.trustAsHtml(h);
@@ -8,7 +8,7 @@ export default ($scope, $sce, $location, helperService, eSteemService, appVersio
   $scope.active = 0;
   $scope.slides = [];
 
-  eSteemService.getWelcome().then(resp => {
+  dExplorerService.getWelcome().then(resp => {
     let c = 0;
     for (let s of resp.data) {
       const i = Object.assign({}, s, {id: c});

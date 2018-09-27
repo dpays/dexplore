@@ -31,7 +31,7 @@ export default () => {
 
       $scope.faqClicked = () => {
         $rootScope.selectedPost = null;
-        let u = `/post/esteem/good-karma/esteem-faq-updated-e2baacf0a8475`;
+        let u = `/post/dexplorer/dexplorer/dexplorer-faq`;
         $location.path(u);
       };
 

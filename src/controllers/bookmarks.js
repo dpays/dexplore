@@ -1,4 +1,4 @@
-export default ($scope, $rootScope, $location, $uibModalInstance, $timeout, eSteemService, steemService, activeUsername) => {
+export default ($scope, $rootScope, $location, $uibModalInstance, $timeout, dExplorerService, dpayService, activeUsername) => {
 
   $scope.term = '';
 
@@ -28,7 +28,7 @@ export default ($scope, $rootScope, $location, $uibModalInstance, $timeout, eSte
 
   $scope.bookmarkClicked = (b) => {
     $scope.processing = true;
-    steemService.getContent(b.author, b.permlink).then((post) => {
+    dpayService.getContent(b.author, b.permlink).then((post) => {
       $rootScope.selectedPost = post;
       goDetail(post);
     }).catch((e) => {
@@ -40,7 +40,7 @@ export default ($scope, $rootScope, $location, $uibModalInstance, $timeout, eSte
 
   $scope.removeClicked = (b) => {
     $scope.processing = true;
-    eSteemService.removeBookmark(b._id, activeUsername()).then((r) => {
+    dExplorerService.removeBookmark(b._id, activeUsername()).then((r) => {
       // Create bookmark list ignoring deleted bookmark
       $rootScope.bookmarks = $rootScope.bookmarks.filter(i => i._id !== b._id);
       loadData();

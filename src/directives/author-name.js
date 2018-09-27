@@ -29,7 +29,7 @@ export default () => {
       authorData: '='
     },
     template: `<a ng-click="clicked()" class="author-name-popover" popover-enable="id" uib-popover-template="'templates/directives/author-name-popover.html'" popover-placement="bottom" popover-trigger="'outsideClick'" tabindex="0">{{ username }}</a>`,
-    controller: ($scope, $rootScope, $location, steemService, steemAuthenticatedService, activeUsername) => {
+    controller: ($scope, $rootScope, $location, dpayService, dpayAuthenticatedService, activeUsername) => {
       $scope.$watch('authorData', (n, o) => {
         if (n) {
           [$scope.id, $scope.username, $scope.name, $scope.bio] = prepareAuthorData(n);
@@ -69,7 +69,7 @@ export default () => {
       const isFollowing = async (follower, following) => {
         let f = false;
 
-        let resp = await steemService.getFollowing(follower, following, 'blog', 1).then((resp) => {
+        let resp = await dpayService.getFollowing(follower, following, 'blog', 1).then((resp) => {
           return resp;
         }).catch((e) => {
           // TODO: Handle error
@@ -87,7 +87,7 @@ export default () => {
       const isMuted = async (follower, following) => {
         let f = false;
 
-        const resp = await steemService.getFollowing(follower, following, 'ignore', 1).then((resp) => {
+        const resp = await dpayService.getFollowing(follower, following, 'ignore', 1).then((resp) => {
           return resp;
         }).catch((e) => {
           // TODO: Handle error
@@ -158,7 +158,7 @@ export default () => {
       $scope.follow = () => {
         $scope.vBlockControl = true;
         $scope.vFollowing = true;
-        steemAuthenticatedService.follow($scope.username).then((resp) => {
+        dpayAuthenticatedService.follow($scope.username).then((resp) => {
           afterFollow();
         }).catch((e) => {
           // TODO: handle error
@@ -180,7 +180,7 @@ export default () => {
       $scope.unfollow = () => {
         $scope.vBlockControl = true;
         $scope.vUnfollowing = true;
-        steemAuthenticatedService.unfollow($scope.username).then((resp) => {
+        dpayAuthenticatedService.unfollow($scope.username).then((resp) => {
           afterUnfollow();
         }).catch((e) => {
           // TODO: handle error
@@ -202,7 +202,7 @@ export default () => {
       $scope.mute = () => {
         $scope.vBlockControl = true;
         $scope.vMuting = true;
-        steemAuthenticatedService.mute($scope.username).then((resp) => {
+        dpayAuthenticatedService.mute($scope.username).then((resp) => {
           afterMute();
         }).catch((e) => {
           // TODO: handle error
@@ -224,7 +224,7 @@ export default () => {
       $scope.unMute = () => {
         $scope.vBlockControl = true;
         $scope.vUnmuting = true;
-        steemAuthenticatedService.unfollow($scope.username).then((resp) => {
+        dpayAuthenticatedService.unfollow($scope.username).then((resp) => {
           afterUnmute();
         }).catch((e) => {
           // TODO: handle error
